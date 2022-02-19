@@ -15,9 +15,11 @@ public class Deck {
             // Inner loop is for ranks
             for (int rank = 1; rank < 13; rank ++) {
                 System.out.println("SUITE: " + suite + " RANK: " + rank); // DEBUG
-
+                this.cards.add(new Card(suite,rank));
             }
         }
+
+        shuffle();
     }
 
     public void shuffle() {
