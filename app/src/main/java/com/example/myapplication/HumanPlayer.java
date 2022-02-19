@@ -3,12 +3,12 @@ package com.example.myapplication;
 public class HumanPlayer {
     Deck deck;
 
-    public HumanPlayer() {
-
+    public HumanPlayer(Deck deck) {
+        this.deck = deck;
     }
 
-    public void setDeck(Deck deck) {
-        this.deck = deck;
+    public HumanPlayer() {
+        this.deck = null;
     }
 
     public Deck getDeck() {

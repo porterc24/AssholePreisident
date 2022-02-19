@@ -27,8 +27,15 @@ public class PresidentGameState {
      */
     private void dealCards() {
         Deck masterDeck = new Deck(new ArrayList<Card>());
-
         masterDeck.generateMasterDeck();
+
+        for (HumanPlayer player: this.players) {
+            for (int i = 0; i < 52 / players.size(); i++) {
+                Card randomCard = (masterDeck.cards.get((int) Math.random() * masterDeck.MAX_CARDS));
+                player.deck.cards.add(randomCard);
+                masterDeck.cards.remove(randomCard);
+            }
+        }
 
         // THIS IS FOR TESTING
         this.players.forEach(p -> {
