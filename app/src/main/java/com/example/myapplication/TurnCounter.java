@@ -1,5 +1,9 @@
 package com.example.myapplication;
 
+/**
+ * This class keeps track of what turn it is. When the turn counter is greater than
+ * the number of players, it resets back to 1.
+ */
 public class TurnCounter {
     int turn;
     int max_players;
