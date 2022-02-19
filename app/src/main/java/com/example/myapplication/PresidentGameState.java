@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class PresidentGameState {
     int maxPlayers;
 
-    ArrayList players;
+    ArrayList<HumanPlayer> players;
     TurnCounter currTurn;
 
     public PresidentGameState(ArrayList players) {
@@ -20,5 +20,13 @@ public class PresidentGameState {
     private void dealCards() {
         Deck masterDeck = new Deck(new ArrayList<Card>());
         masterDeck.generateMasterDeck();
+
+        for (HumanPlayer player: this.players) {
+            for (int i = 0; i < 52 / players.size(); i++) {
+                Card randomCard = (masterDeck.cards.get((int) Math.random() * masterDeck.MAX_CARDS));
+                player.deck.cards.add(randomCard);
+                masterDeck.cards.remove(randomCard);
+            }
+        }
     }
 }

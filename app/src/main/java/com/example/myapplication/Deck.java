@@ -6,6 +6,7 @@ import java.util.Collections;
 
 public class Deck {
     ArrayList<Card> cards;
+    public final int MAX_CARDS = 52;
 
     public Deck(ArrayList<Card> cards) {
         this.cards = cards;
