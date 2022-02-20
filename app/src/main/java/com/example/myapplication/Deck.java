@@ -40,32 +40,6 @@ public class Deck {
         shuffle();
     }
 
-//    /**
-//     * This method is used for dealing cards from the master deck to the other players.
-//     * It divides the deck evenly into the given number of slices, and returns all of the sliced
-//     * decks as an ArrayList.
-//     * @param slices How many decks that the deck will be cut into
-//     * @return All of the sliced decks
-//     */
-//    public ArrayList<Deck> sliceDeck(int slices) {
-//
-//        int slice_quantity = (int) (52 / slices); // The number of cards in each sliced deck
-//        ArrayList<Deck> sliced_decks = new ArrayList<>();
-//
-//        for (int i = 0; i < slices; i++) {
-//            sliced_decks.add(new Deck());
-//            for (int j = 0; j < slice_quantity; j++) {
-//                // This line pulls a card from the current deck into the new one
-//                sliced_decks.get(slices).addCard(
-//                        this.cards.get((i*slice_quantity) + j)
-//                );
-//                Log.i("SLICE","" + (i*slice_quantity) + j);
-//            }
-//        }
-//
-//        return sliced_decks;
-//    }
-
     public void shuffle() {
         Collections.shuffle(this.cards);
     }
@@ -76,7 +50,7 @@ public class Deck {
 
         this.cards.forEach(c -> {
             output.append("SUITE: " + c.getSuite() +
-                          "RANK: " + c.getRank() + "\n");
+                          " RANK: " + c.getRank() + "\n");
         });
 
         return output.toString();
