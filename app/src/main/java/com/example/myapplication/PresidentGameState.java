@@ -4,7 +4,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-public class PresidentGameState implements Cloneable {
+public class PresidentGameState {
     int maxPlayers;
 
     ArrayList<HumanPlayer> players;
@@ -79,10 +79,14 @@ public class PresidentGameState implements Cloneable {
         masterDeck.generateMasterDeck();
 
         for (HumanPlayer player: this.players) {
-            for (int i = 0; i < 52 / players.size(); i++) {
+            for (int i = 0; i < (52 / players.size()); i++) {
+                //selects a random card of the 52 in masterDeck
                 Card randomCard = (masterDeck.cards.get((int) Math.random() * masterDeck.MAX_CARDS));
+
+                //adds the card to the players deck/hand and removes it from masterDeck
                 player.deck.cards.add(randomCard);
                 masterDeck.cards.remove(randomCard);
+                //Log.i("DECKS", "Value of i: " + i);
             }
         }
 
@@ -90,6 +94,26 @@ public class PresidentGameState implements Cloneable {
         this.players.forEach(p -> {
             Log.i("DECKS","PLAYER: " + p.getDeck().toString());
         });
+    }
+
+    @Override
+    public String toString() {
+        return "{GameState Info: maxPlayers = " + maxPlayers + ", currTurn = " + currTurn +
+                ", Player1 = " + players.get(0) + ", Player2 = " + players.get(1) + "}\n";
+    }
+
+    public boolean playCards(HumanPlayer player) {
+        for (int i = 0; i < maxPlayers; i++) {
+            if (i == currTurn.turn) {
+                if (player.getId() == players.get(i).getId()) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+        }
+        return false;
     }
 
     public int getMaxPlayers() {

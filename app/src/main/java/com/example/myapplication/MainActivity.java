@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
 
         // THIS IS FOR TESTING
         ArrayList<HumanPlayer> players = new ArrayList<HumanPlayer>();
+
         players.add(new HumanPlayer());
         players.add(new HumanPlayer());
 
