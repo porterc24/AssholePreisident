@@ -17,20 +17,23 @@ public enum CardSuites {
      * @return the name of the suite
      */
     public static String getSuiteName(int n) {
+
+        String suiteName = "NULL";
+
         switch (n) {
             case 1:
-                return "DIAMONDS";
+                suiteName = "DIAMONDS";
                 break;
             case 2:
-                return "CLUBS";
+                suiteName = "CLUBS";
                 break;
             case 3:
-                return "HEARTS";
+                suiteName = "HEARTS";
                 break;
             case 4:
-                return "SPADES";
+                suiteName = "SPADES";
                 break;
         }
-        return null;
+        return suiteName;
     }
 }
