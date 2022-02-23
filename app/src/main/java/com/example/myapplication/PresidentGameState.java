@@ -12,7 +12,11 @@ public class PresidentGameState {
 
     ArrayList<HumanPlayer> players;
     TurnCounter currTurn;
+
+    // currently inPlayPile has no instance var for the "top card", maybe just make it the highest
+    // index of the arrayList?
     Deck inPlayPile;
+
     Deck discardPile;
     CurrentState state;
 
