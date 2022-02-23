@@ -20,6 +20,12 @@ public class Deck {
         this.cards = cards;
     }
 
+    // Copy ctor for Deck
+    public Deck(Deck orig) {
+        this.cards = new ArrayList<Card>();
+        this.cards.addAll(orig.cards); // Copying all of the cards into this deck
+    }
+
     public void addCard(Card card) {
         this.cards.add(card);
     }

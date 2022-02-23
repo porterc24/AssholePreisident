@@ -4,9 +4,15 @@ public class Card {
     private final int rank;
     private final int suite;
 
-    public Card(int suite, int rank) {
-        this.suite = suite;
+    public Card(int rank, int suite) {
         this.rank = rank;
+        this.suite = suite;
+    }
+
+    // Copy ctor for Card class
+    public Card(Card orig) {
+        this.rank = orig.rank;
+        this.suite = orig.suite;
     }
 
     public int getRank() {

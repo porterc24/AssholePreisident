@@ -13,6 +13,12 @@ public class TurnCounter {
         this.turn = 1;
     }
 
+    // Copy ctor for TurnCounter
+    public TurnCounter(TurnCounter orig) {
+        this.max_players = orig.max_players;
+        this.turn = orig.turn;
+    }
+
     public void nextTurn() {
         this.turn++;
         if (this.turn > max_players) {
