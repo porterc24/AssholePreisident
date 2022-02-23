@@ -98,11 +98,23 @@ public class PresidentGameState {
 
     @Override
     public String toString() {
-        return "{GameState Info: maxPlayers = " + maxPlayers + ", currTurn = " + currTurn +
-                ", Player1 = " + players.get(0) + ", Player2 = " + players.get(1) + "}\n";
+        int playerNo = 1;
+        StringBuilder info = new StringBuilder("{GameState Info: maxPlayers = " + maxPlayers + ", currTurn = " + currTurn +
+                ", Players [ ");
+        for (HumanPlayer player: players) {
+            info.append("(Player " + playerNo + ", ID: " + player.getId() + ", Cards: ");
+            for (Card card: player.deck.cards) {
+                info.append("{ " + card.getRank() + " of " + card.getSuite() + " } ");
+            }
+            info.append(", " + "Points: " + player.getScore() + " ) \n");
+            playerNo++;
+        }
+
+        info.append(" ]}");
+        return info.toString();
     }
 
-    public boolean playCards(HumanPlayer player) {
+    public boolean isValidMove(HumanPlayer player) {
         for (int i = 0; i < maxPlayers; i++) {
             if (i == currTurn.turn) {
                 if (player.getId() == players.get(i).getId()) {
@@ -115,6 +127,24 @@ public class PresidentGameState {
         }
         return false;
     }
+
+    public boolean playCard(HumanPlayer player) {
+        if (isValidMove(player)) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean pass(HumanPlayer player) {
+        if (isValidMove(player)) {
+            return true;
+        }
+        return false;
+     }
+
+     public boolean selectCard(HumanPlayer player) {
+        return true;
+     }
 
     public int getMaxPlayers() {
         return maxPlayers;
