@@ -5,6 +5,9 @@ import java.util.UUID;
 public class HumanPlayer {
     Deck deck;
     int score;
+
+    // This UUID is automatically generated each time a new HumanPlayer is made.
+    // It's useful for comparing two player objects.
     UUID id;
     boolean isOut;
 
