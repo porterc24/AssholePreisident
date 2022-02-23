@@ -102,7 +102,7 @@ public class PresidentGameState {
                 ", Player1 = " + players.get(0) + ", Player2 = " + players.get(1) + "}\n";
     }
 
-    public boolean playCards(HumanPlayer player) {
+    public boolean isValidMove(HumanPlayer player) {
         for (int i = 0; i < maxPlayers; i++) {
             if (i == currTurn.turn) {
                 if (player.getId() == players.get(i).getId()) {
@@ -115,6 +115,24 @@ public class PresidentGameState {
         }
         return false;
     }
+
+    public boolean playCard(HumanPlayer player) {
+        if (isValidMove(player)) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean pass(HumanPlayer player) {
+        if (isValidMove(player)) {
+            return true;
+        }
+        return false;
+     }
+
+     public boolean selectCard(HumanPlayer player) {
+        return true;
+     }
 
     public int getMaxPlayers() {
         return maxPlayers;
