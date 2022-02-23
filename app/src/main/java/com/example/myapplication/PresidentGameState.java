@@ -13,6 +13,7 @@ public class PresidentGameState {
     ArrayList<HumanPlayer> players;
     TurnCounter currTurn;
     Deck discardPile;
+    CurrentState state;
 
     /**
      * Default setup for a game.
@@ -27,6 +28,9 @@ public class PresidentGameState {
         this.currTurn = new TurnCounter(this.maxPlayers);
 
         dealCards();
+
+        state = CurrentState.INIT_ARRAYS;
+
     }
 
     // Deep copy ctor for PresidentGameState
@@ -41,6 +45,8 @@ public class PresidentGameState {
         // Mutable class types
         this.discardPile = new Deck(orig.discardPile);
         this.currTurn = new TurnCounter(orig.currTurn);
+
+        state = CurrentState.INIT_OBJECTS;
     }
 
     /**
@@ -63,8 +69,10 @@ public class PresidentGameState {
      * out to the players.
      */
     private void dealCards() {
+        state = CurrentState.GAME_SETUP;
         Deck masterDeck = new Deck(new ArrayList<Card>());
         masterDeck.generateMasterDeck();
+
 
         for (HumanPlayer player: this.players) {
             for (int i = 0; i < (52 / players.size()); i++) {
@@ -82,6 +90,8 @@ public class PresidentGameState {
         this.players.forEach(p -> {
             Log.i("DECKS","PLAYER: " + p.getDeck().toString());
         });
+
+        state = CurrentState.MAIN_PLAY;
     }
 
     @Override
@@ -121,6 +131,8 @@ public class PresidentGameState {
         return false;
     }
 
+
+
     public boolean playCard(HumanPlayer player) {
         if (isPlayerTurn(player)) {
             return true;
@@ -153,5 +165,19 @@ public class PresidentGameState {
 
     public Deck getDiscardPile() {
         return discardPile;
+    }
+
+    public boolean endGame(ArrayList<HumanPlayer> players){
+        int out = 0;
+        for(int i = 0; i < players.size(); i++){
+            if(players.get(i).getIsOut() == false) {
+                out++;
+            }
+        }
+        if(out == players.size() - 1){
+            state = CurrentState.GAME_END;
+            return true;
+        }
+        return false;
     }
 }
