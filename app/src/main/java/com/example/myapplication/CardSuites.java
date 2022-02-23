@@ -11,7 +11,12 @@ public enum CardSuites {
         this.suite = suite;
     }
 
-    public String getSuiteName(int n) {
+    /**
+     * Returns the assosciated name of a suite with its number.
+     * @param n the number of the suite
+     * @return the name of the suite
+     */
+    public static String getSuiteName(int n) {
         switch (n) {
             case 1:
                 return "DIAMONDS";

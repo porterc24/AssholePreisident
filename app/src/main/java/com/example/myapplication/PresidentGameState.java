@@ -92,7 +92,7 @@ public class PresidentGameState {
         for (HumanPlayer player: players) {
             info.append("(Player " + playerNo + ", ID: " + player.getId() + ", Cards: ");
             for (Card card: player.deck.cards) {
-                info.append("{ " + card.getRank() + " of " + card.getSuite() + " } ");
+                info.append("{ " + card.getRank() + " of " + CardSuites.getSuiteName(card.getSuite()) + " } ");
             }
             info.append(", " + "Points: " + player.getScore() + " ) \n");
             playerNo++;
