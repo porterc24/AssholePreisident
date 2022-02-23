@@ -40,7 +40,7 @@ public class Deck {
             // Inner loop is for ranks
             for (int rank = 1; rank <= 13; rank ++) {
                 Log.i("President","SUITE: " + suite + " RANK: " + rank); // DEBUG
-                this.cards.add(new Card(suite,rank));
+                this.cards.add(new Card(rank+2,suite));
             }
         }
         shuffle();
