@@ -94,6 +94,11 @@ public class PresidentGameState {
         state = CurrentState.MAIN_PLAY;
     }
 
+    /**
+     * This method prints out returns a String with the attributes of the current PresidentGameState
+     * @return info.toString() returns the StringBuilder with the info
+     */
+
     @Override
     public String toString() {
         int playerNo = 1;
@@ -102,7 +107,7 @@ public class PresidentGameState {
         for (HumanPlayer player: players) {
             info.append("(Player " + playerNo + ", ID: " + player.getId() + ", Cards: ");
             for (Card card: player.deck.cards) {
-                info.append("{ " + card.getRank() + " of " + CardSuites.getSuiteName(card.getSuite()) + " } ");
+                info.append("{ " + CardValues.getCardValue(card.getRank()) + " of " + CardSuites.getSuiteName(card.getSuite()) + " } ");
             }
             info.append(", " + "Points: " + player.getScore() + " ) \n");
             playerNo++;

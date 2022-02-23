@@ -19,7 +19,5 @@ public class Card {
         return rank;
     }
 
-    public int getSuite() {
-        return suite;
-    }
+    public int getSuite() { return suite; }
 }
