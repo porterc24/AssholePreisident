@@ -12,6 +12,7 @@ public class PresidentGameState {
 
     ArrayList<HumanPlayer> players;
     TurnCounter currTurn;
+    Deck inPlayPile;
     Deck discardPile;
     CurrentState state;
 
@@ -24,6 +25,7 @@ public class PresidentGameState {
         this.currentStage = 0;
         this.maxPlayers = players.size();
         this.discardPile = new Deck();
+        this.inPlayPile = new Deck();
 
         this.currTurn = new TurnCounter(this.maxPlayers);
 
@@ -45,6 +47,7 @@ public class PresidentGameState {
         // Mutable class types
         this.discardPile = new Deck(orig.discardPile);
         this.currTurn = new TurnCounter(orig.currTurn);
+        this.inPlayPile = new Deck(orig.inPlayPile);
 
         state = CurrentState.INIT_OBJECTS;
     }
@@ -94,6 +97,13 @@ public class PresidentGameState {
         state = CurrentState.MAIN_PLAY;
     }
 
+    private void updateInPlayPile(boolean canPlayCards, HumanPlayer player) {
+        if (canPlayCards) {
+            //will later update the playCard function to "play" the card to the inPlayPile
+            playCard(player);
+        }
+    }
+
     /**
      * This method prints out returns a String with the attributes of the current PresidentGameState
      * @return info.toString() returns the StringBuilder with the info
@@ -136,8 +146,6 @@ public class PresidentGameState {
         return false;
     }
 
-
-
     public boolean playCard(HumanPlayer player) {
         if (isPlayerTurn(player)) {
             return true;
@@ -150,9 +158,9 @@ public class PresidentGameState {
             return true;
         }
         return false;
-     }
+    }
 
-     public boolean selectCard(HumanPlayer player) {
+    public boolean selectCard(HumanPlayer player) {
         return true;
      }
 
@@ -171,6 +179,8 @@ public class PresidentGameState {
     public Deck getDiscardPile() {
         return discardPile;
     }
+
+    public Deck getInPlayPile() { return inPlayPile; }
 
     public boolean endGame(ArrayList<HumanPlayer> players){
         int out = 0;
