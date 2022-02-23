@@ -20,12 +20,16 @@ public enum CardSuites {
         switch (n) {
             case 1:
                 return "DIAMONDS";
+                break;
             case 2:
                 return "CLUBS";
+                break;
             case 3:
                 return "HEARTS";
+                break;
             case 4:
                 return "SPADES";
+                break;
         }
         return null;
     }
