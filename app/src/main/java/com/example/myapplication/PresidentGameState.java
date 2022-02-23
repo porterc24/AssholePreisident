@@ -98,8 +98,20 @@ public class PresidentGameState {
 
     @Override
     public String toString() {
-        return "{GameState Info: maxPlayers = " + maxPlayers + ", currTurn = " + currTurn +
-                ", Player1 = " + players.get(0) + ", Player2 = " + players.get(1) + "}\n";
+        int playerNo = 1;
+        StringBuilder info = new StringBuilder("{GameState Info: maxPlayers = " + maxPlayers + ", currTurn = " + currTurn +
+                ", Players [ ");
+        for (HumanPlayer player: players) {
+            info.append("(Player " + playerNo + ", ID: " + player.getId() + ", Cards: ");
+            for (Card card: player.deck.cards) {
+                info.append("{ " + card.getRank() + " of " + card.getSuite() + " } ");
+            }
+            info.append(", " + "Points: " + player.getScore() + " ) \n");
+            playerNo++;
+        }
+
+        info.append(" ]}");
+        return info.toString();
     }
 
     public boolean isValidMove(HumanPlayer player) {

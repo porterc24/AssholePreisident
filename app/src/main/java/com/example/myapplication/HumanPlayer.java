@@ -6,6 +6,7 @@ public class HumanPlayer {
     Deck deck;
     int score;
     UUID id;
+    boolean isOut;
 
     public HumanPlayer(Deck deck) {
         this.id = UUID.randomUUID();
@@ -20,11 +21,12 @@ public class HumanPlayer {
     }
 
     public Deck getDeck() {
-        return deck;
+        return this.deck;
     }
 
+    public UUID getId() {return this.id; }
 
-    public UUID getId() {
-        return id;
-    }
+    public int getScore() {return this.score;}
+
+    public boolean getIsOut() {return this.isOut;}
 }
