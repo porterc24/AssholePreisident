@@ -5,6 +5,10 @@ import java.util.ArrayList;
 
 public class PresidentGameState {
 
+    //maybe include a skip counter?
+    //maybe flash screen with a message when player's turn is auto-skipped?
+    //maybe flash screen with a message when a round ends (when in-play pile is reset)?
+
     // IMPORTANT: If you add a new instance variable, make sure you update the
     // deep copy ctor!!!!!
     int maxPlayers;
