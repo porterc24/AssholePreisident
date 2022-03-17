@@ -72,7 +72,7 @@ public abstract class Player {
 
     public void selectCard(Card card) {
         if (this.selectedCards.add(card)) {
-            this.game.renderCards(this, false);
+            this.game.renderCards(this);
         }
     }
 

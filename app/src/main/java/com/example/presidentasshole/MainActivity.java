@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.example.presidentasshole.cards.Card;
 import com.example.presidentasshole.cards.CardImage;
@@ -30,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // THIS IS FOR TESTING
-        PresidentGame game = new PresidentGame(findViewById(R.id.PlayerCardScrollViewLayout));
+        PresidentGame game = new PresidentGame((RelativeLayout) findViewById(R.id.PlayerCardScrollViewLayout));
         ArrayList<Player> players = new ArrayList<>();
 
         players.add(new HumanPlayer(game));
@@ -42,7 +44,11 @@ public class MainActivity extends AppCompatActivity {
         Log.i("GameStateInfo", gameState.toString());
 
         HumanPlayer player1 = (HumanPlayer) gameState.getPlayerFromTurn();
-        game.renderCards(player1,false);
+        game.renderCards(player1);
+
+        // Button assignment
+        Button collapse_button = findViewById(R.id.collapse_button);
+        collapse_button.setOnClickListener(game);
 
     }
 }

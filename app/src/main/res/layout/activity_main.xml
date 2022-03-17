@@ -174,10 +174,29 @@
             android:gravity="center|center_horizontal"
             android:orientation="horizontal">
 
-            <Space
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/collapse_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Collapse" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </LinearLayout>
 
             <HorizontalScrollView
                 android:id="@+id/PlayerCardScrollView"
@@ -187,7 +206,7 @@
                 android:fadeScrollbars="false"
                 android:isScrollContainer="false">
 
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/PlayerCardScrollViewLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -202,57 +221,43 @@
                         android:adjustViewBounds="true"
                         android:background="#013220"
                         android:cropToPadding="true"
-                        android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/test_diamonds"
-                        tools:ignore="SpeakableTextPresentCheck" />
+                        android:scaleType="centerCrop" />
 
                     <ImageButton
                         android:id="@+id/imageButton7"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5sp"
-                        android:layout_weight="1"
                         android:adjustViewBounds="true"
                         android:background="#013220"
-                        android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/test_hearts"
-                        tools:ignore="SpeakableTextPresentCheck" />
+                        android:scaleType="centerCrop" />
 
                     <ImageButton
                         android:id="@+id/imageButton6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5sp"
-                        android:layout_weight="1"
                         android:adjustViewBounds="true"
                         android:background="#013220"
-                        android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/test_ace"
-                        tools:ignore="SpeakableTextPresentCheck" />
+                        android:scaleType="centerCrop" />
 
                     <ImageButton
                         android:id="@+id/imageButton5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5sp"
-                        android:layout_weight="1"
                         android:adjustViewBounds="true"
                         android:background="#013220"
-                        android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/test_diamonds"
-                        tools:ignore="SpeakableTextPresentCheck" />
+                        android:scaleType="centerCrop" />
 
                     <ImageButton
                         android:id="@+id/imageButton3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5sp"
-                        android:layout_weight="1"
                         android:adjustViewBounds="true"
                         android:background="#013220"
-                        android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/test_hearts"
-                        tools:ignore="SpeakableTextPresentCheck" />
+                        android:scaleType="centerCrop" />
 
                     <ImageButton
                         android:id="@+id/imageButton4"
@@ -261,9 +266,7 @@
                         android:layout_margin="5sp"
                         android:adjustViewBounds="true"
                         android:background="#013220"
-                        android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/test_ace"
-                        tools:ignore="SpeakableTextPresentCheck" />
+                        android:scaleType="centerCrop" />
 
                     <ImageButton
                         android:id="@+id/imageButtons"
@@ -273,9 +276,7 @@
                         android:adjustViewBounds="true"
                         android:background="#013220"
                         android:cropToPadding="true"
-                        android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/test_diamonds"
-                        tools:ignore="SpeakableTextPresentCheck" />
+                        android:scaleType="centerCrop" />
 
                     <ImageButton
                         android:id="@+id/imageButtonss"
@@ -285,9 +286,7 @@
                         android:adjustViewBounds="true"
                         android:background="#013220"
                         android:cropToPadding="true"
-                        android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/test_diamonds"
-                        tools:ignore="SpeakableTextPresentCheck" />
+                        android:scaleType="centerCrop" />
 
                     <ImageButton
                         android:id="@+id/imageButton22"
@@ -297,9 +296,7 @@
                         android:adjustViewBounds="true"
                         android:background="#013220"
                         android:cropToPadding="true"
-                        android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/test_diamonds"
-                        tools:ignore="SpeakableTextPresentCheck" />
+                        android:scaleType="centerCrop" />
 
                     <ImageButton
                         android:id="@+id/imageButton12"
@@ -309,10 +306,8 @@
                         android:adjustViewBounds="true"
                         android:background="#013220"
                         android:cropToPadding="true"
-                        android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/test_diamonds"
-                        tools:ignore="SpeakableTextPresentCheck" />
-                </LinearLayout>
+                        android:scaleType="centerCrop" />
+                </RelativeLayout>
             </HorizontalScrollView>
 
             <Space
