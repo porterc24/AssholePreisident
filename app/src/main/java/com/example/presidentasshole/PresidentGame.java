@@ -6,6 +6,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Space;
 
 import com.example.presidentasshole.actions.GameAction;
 import com.example.presidentasshole.cards.Card;
@@ -39,9 +40,12 @@ public class PresidentGame implements View.OnClickListener {
      */
     public void renderCards(Player player) {
         this.card_view.removeAllViews();
-        //TODO make cards more easily differentiable in collapse mode (perhaps alternating shading)?
+        // TODO make cards more easily differentiable in collapse mode (perhaps alternating shading)?
+        // Filler is my shitty way of preventing the first two cards from being on top of each other
+        Space filler = new Space(this.card_view.getContext().getApplicationContext());
+        filler.setId(0);
         ArrayList<Card> cards = player.getDeck().getCards();
-        for (int i = 0; i < cards.size(); i++) {
+        for (int i = 1; i < cards.size(); i++) {
             Card c = cards.get(i);
             CardImage new_card = new CardImage(
                     this.card_view.getContext().getApplicationContext(),

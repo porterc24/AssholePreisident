@@ -44,7 +44,6 @@ public class CardImage extends androidx.appcompat.widget.AppCompatImageButton im
                 RelativeLayout.LayoutParams.WRAP_CONTENT
         );
         // TODO might wanna replace this with display pixels
-        // TODO make card collapse actually work
         this.card_model = card_model;
         this.game = game;
         this.setId(id);
@@ -52,6 +51,7 @@ public class CardImage extends androidx.appcompat.widget.AppCompatImageButton im
         int margins = 5;
 
         // This && check is to prevent the card from going out of bounds
+        // TODO fix this
         if (collapse && id > 1) {
             margins = -45;
         }
@@ -91,6 +91,10 @@ public class CardImage extends androidx.appcompat.widget.AppCompatImageButton im
     @Override
     public void onClick(View view) {
         Log.i("CardClick",card_model.toString());
-        this.game.getGameState().getPlayerFromTurn().selectCard(this.card_model);
+        if (!this.card_model.isSelected()) {
+            this.game.getGameState().getPlayerFromTurn().selectCard(this.card_model);
+        } else {
+            this.game.getGameState().getPlayerFromTurn().deselectCard(this.card_model);
+        }
     }
 }

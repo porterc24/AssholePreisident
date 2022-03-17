@@ -97,8 +97,8 @@ public class CardStack {
         }
         return card.getRank() == getStackRank();
     }
-    // Ensures that every card is of the same rank as each other.
 
+    // Ensures that every card is of the same rank as each other.
     private boolean validateCards(List<Card> card_list) {
         boolean flag = true;
         // Checking if the given card list contains all the same card ranks
@@ -116,6 +116,17 @@ public class CardStack {
         card_list.forEach(c -> {
             c.setSelected(true);
         });
+    }
+
+    public boolean remove(Card card) {
+        for (int i = 0; i < this.cards.size(); i++) {
+            if (this.cards.get(i).cardEquals(card)) {
+                card.setSelected(false);
+                this.cards.remove(i);
+                return true;
+            }
+        }
+        return false;
     }
 
     public int getStackRank() {

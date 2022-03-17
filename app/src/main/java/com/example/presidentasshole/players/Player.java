@@ -22,7 +22,7 @@ import java.util.UUID;
  * Manages information about Players. Contains methods for playing cards, passing, etc.
  * Information is received from the GameState/Game via the receiveInfo() method
  */
-public abstract class Player {
+public class Player {
 
     private Deck deck;
     private CardStack selectedCards;
@@ -72,6 +72,12 @@ public abstract class Player {
 
     public void selectCard(Card card) {
         if (this.selectedCards.add(card)) {
+            this.game.renderCards(this);
+        }
+    }
+
+    public void deselectCard(Card card) {
+        if (this.selectedCards.remove(card)) {
             this.game.renderCards(this);
         }
     }
