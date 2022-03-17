@@ -6,6 +6,9 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.example.presidentasshole.players.HumanPlayer;
+import com.example.presidentasshole.players.Player;
+
 import java.util.ArrayList;
 
 /**

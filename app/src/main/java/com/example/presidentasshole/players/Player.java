@@ -1,4 +1,14 @@
-package com.example.presidentasshole;
+package com.example.presidentasshole.players;
+
+import com.example.presidentasshole.cards.Card;
+import com.example.presidentasshole.cards.CardStack;
+import com.example.presidentasshole.cards.Deck;
+import com.example.presidentasshole.PresidentGame;
+import com.example.presidentasshole.actions.ClearDeckAction;
+import com.example.presidentasshole.actions.DealCardAction;
+import com.example.presidentasshole.actions.GameAction;
+import com.example.presidentasshole.actions.PassAction;
+import com.example.presidentasshole.actions.PlayCardAction;
 
 import java.util.List;
 import java.util.UUID;

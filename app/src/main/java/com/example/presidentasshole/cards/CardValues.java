@@ -1,4 +1,4 @@
-package com.example.presidentasshole;
+package com.example.presidentasshole.cards;
 
 /**
  * @author Margo Brown

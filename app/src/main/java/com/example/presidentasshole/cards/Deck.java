@@ -1,10 +1,8 @@
-package com.example.presidentasshole;
+package com.example.presidentasshole.cards;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * @author Margo Brown

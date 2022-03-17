@@ -1,4 +1,7 @@
-package com.example.presidentasshole;
+package com.example.presidentasshole.actions;
+
+import com.example.presidentasshole.cards.CardStack;
+import com.example.presidentasshole.players.Player;
 
 /**
  * @author Max Woods
