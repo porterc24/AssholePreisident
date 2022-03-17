@@ -248,7 +248,9 @@ public class PresidentGameState {
             inPlayPile.print();
             // The PromptAction is for telling the AI player to make a move:
             this.currTurn.nextTurn();
+
             this.game.sendInfo(new PromptAction(null), getPlayerFromTurn());
+            this.game.renderPlayPile();
             return true;
         }
         return false;

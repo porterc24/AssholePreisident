@@ -13,7 +13,8 @@ import java.util.Collections;
  * This class is used for managing groups of cards. It contains useful methods for generating
  * decks, shuffling, and picking out selections of cards from the deck.
  */
-public class Deck {
+public class
+Deck {
 
     private ArrayList<Card> cards;
     public final int MAX_CARDS = 52;

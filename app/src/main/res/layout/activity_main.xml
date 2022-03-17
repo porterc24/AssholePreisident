@@ -102,19 +102,28 @@
                     android:layout_weight="2"
                     android:rotation="90"
                     app:srcCompat="@drawable/backofcard" />
+
             </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/imageButton8"
+            <RelativeLayout
+                android:id="@+id/PlayPileLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="30sp"
                 android:layout_weight="1"
-                android:adjustViewBounds="true"
-                android:background="#013220"
-                android:cropToPadding="true"
-                android:scaleType="centerInside"
-                app:srcCompat="@drawable/test_hearts" />
+                android:gravity="center">
+
+                <ImageButton
+                    android:id="@+id/imageButton8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="30sp"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true"
+                    android:background="#013220"
+                    android:cropToPadding="true"
+                    android:scaleType="centerInside"
+                    app:srcCompat="@drawable/test_hearts" />
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"

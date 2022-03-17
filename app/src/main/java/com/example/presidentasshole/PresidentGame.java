@@ -4,13 +4,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Space;
 
 import com.example.presidentasshole.actions.GameAction;
 import com.example.presidentasshole.cards.Card;
 import com.example.presidentasshole.cards.CardImage;
+import com.example.presidentasshole.cards.CardStack;
 import com.example.presidentasshole.players.Player;
 
 import java.util.ArrayList;
@@ -26,12 +27,14 @@ public class PresidentGame implements View.OnClickListener {
     private ArrayList<Player> players;
     private PresidentGameState game_state;
 
-    private RelativeLayout card_view; // This is the stack of cards on the GUI
+    private RelativeLayout card_layout; // This is the stack of cards on the current player's hand
+    private RelativeLayout play_layout; // This is the stack of cards on the play pile
 
     private boolean collapse;
 
-    public PresidentGame(RelativeLayout card_view) {
-        this.card_view = card_view;
+    public PresidentGame(RelativeLayout card_view, RelativeLayout play_view) {
+        this.card_layout = card_view;
+        this.play_layout = play_view;
     }
 
     /**
@@ -39,26 +42,57 @@ public class PresidentGame implements View.OnClickListener {
      * @param player
      */
     public void renderCards(Player player) {
-        this.card_view.removeAllViews();
+        this.card_layout.removeAllViews();
         // TODO make cards more easily differentiable in collapse mode (perhaps alternating shading)?
-        // Filler is my shitty way of preventing the first two cards from being on top of each other
-        Space filler = new Space(this.card_view.getContext().getApplicationContext());
-        filler.setId(0);
         ArrayList<Card> cards = player.getDeck().getCards();
-        for (int i = 1; i < cards.size(); i++) {
-            Card c = cards.get(i);
-            CardImage new_card = new CardImage(
-                    this.card_view.getContext().getApplicationContext(),
-                    c,
-                    this,
-                    i,
-                    this.collapse
-            );
 
-            this.card_view.addView(new_card);
+        addCardsToLayout(cards, this.card_layout,0,collapse);
+    }
+
+    /**
+     * Renders the currently played cards on the playpile.
+     */
+    public void renderPlayPile() {
+        this.play_layout.removeAllViews();
+
+        // Initializing back of card object, incase playpile has 0 cards
+        CardStack play_pile = this.game_state.getPlayPile();
+        ImageView back_card = new ImageView(this.card_layout.getContext().getApplicationContext());
+        back_card.setImageResource(R.drawable.backofcard);
+
+        if (play_pile.isEmpty()) {
+            this.play_layout.addView(back_card);
+        } else {
+            addCardsToLayout(play_pile.getCards(),this.play_layout,100,false);
         }
 
-        this.card_view.invalidate();
+    }
+
+    /**
+     * Adds the given list of cards to the layout.
+     * @param cards
+     * @param layout
+     * @param index the starting ID of the cards added to the layout
+     * @param is_collapsed whether or not the cards are displayed on top of each other or fanned
+     */
+    private void addCardsToLayout(ArrayList<Card> cards, RelativeLayout layout,
+                                  int index, boolean is_collapsed) {
+
+        // This is a dumb and lazy patch I made for a card overlay bug
+        Space filler = new Space(layout.getContext().getApplicationContext());
+        filler.setId(index);
+        layout.addView(filler);
+        for (int i = 1; i < cards.size()+1; i++) {
+            Card c = cards.get(i-1);
+            CardImage new_card = new CardImage(
+                    this.card_layout.getContext().getApplicationContext(),
+                    c,
+                    this,
+                    i+index,
+                    is_collapsed
+            );
+            layout.addView(new_card);
+        }
     }
 
     // This is for proj E testing
@@ -118,6 +152,9 @@ public class PresidentGame implements View.OnClickListener {
             } else {
                 button.setText("Collapse");
             }
+
+            //TODO remove this line
+            renderPlayPile();
         }
     }
 }
