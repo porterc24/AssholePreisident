@@ -75,4 +75,54 @@ public enum CardValues {
         }
         return cardValue;
     }
+
+    /**
+     * This is pretty much only used by the toResourceID() method in the Card class.
+     * The converted names need to be a bit different in order to match the card PNG filenames.
+     */
+    public static String getCardValuePNG(int n) {
+        String cardValue = null;
+        switch (n) {
+            case 3:
+                cardValue = "3";
+                break;
+            case 4:
+                cardValue = "4";
+                break;
+            case 5:
+                cardValue = "5";
+                break;
+            case 6:
+                cardValue = "6";
+                break;
+            case 7:
+                cardValue = "7";
+                break;
+            case 8:
+                cardValue = "8";
+                break;
+            case 9:
+                cardValue = "9";
+                break;
+            case 10:
+                cardValue = "10";
+                break;
+            case 11:
+                cardValue = "jack";
+                break;
+            case 12:
+                cardValue = "queen";
+                break;
+            case 13:
+                cardValue = "king";
+                break;
+            case 14:
+                cardValue = "ace";
+                break;
+            case 15:
+                cardValue = "2";
+                break;
+        }
+        return cardValue;
+    }
 }

@@ -114,7 +114,7 @@
                 android:background="#013220"
                 android:cropToPadding="true"
                 android:scaleType="centerInside"
-                app:srcCompat="@drawable/_hearts" />
+                app:srcCompat="@drawable/test_hearts" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -180,6 +180,7 @@
                 android:layout_weight="1" />
 
             <HorizontalScrollView
+                android:id="@+id/PlayerCardScrollView"
                 android:layout_width="700sp"
                 android:layout_height="200sp"
                 android:clipToPadding="false"
@@ -187,6 +188,7 @@
                 android:isScrollContainer="false">
 
                 <LinearLayout
+                    android:id="@+id/PlayerCardScrollViewLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:clipToPadding="false"
@@ -201,7 +203,7 @@
                         android:background="#013220"
                         android:cropToPadding="true"
                         android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/_diamonds"
+                        app:srcCompat="@drawable/test_diamonds"
                         tools:ignore="SpeakableTextPresentCheck" />
 
                     <ImageButton
@@ -213,7 +215,7 @@
                         android:adjustViewBounds="true"
                         android:background="#013220"
                         android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/_hearts"
+                        app:srcCompat="@drawable/test_hearts"
                         tools:ignore="SpeakableTextPresentCheck" />
 
                     <ImageButton
@@ -225,7 +227,7 @@
                         android:adjustViewBounds="true"
                         android:background="#013220"
                         android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/ace"
+                        app:srcCompat="@drawable/test_ace"
                         tools:ignore="SpeakableTextPresentCheck" />
 
                     <ImageButton
@@ -237,7 +239,7 @@
                         android:adjustViewBounds="true"
                         android:background="#013220"
                         android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/_diamonds"
+                        app:srcCompat="@drawable/test_diamonds"
                         tools:ignore="SpeakableTextPresentCheck" />
 
                     <ImageButton
@@ -249,7 +251,7 @@
                         android:adjustViewBounds="true"
                         android:background="#013220"
                         android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/_hearts"
+                        app:srcCompat="@drawable/test_hearts"
                         tools:ignore="SpeakableTextPresentCheck" />
 
                     <ImageButton
@@ -260,7 +262,7 @@
                         android:adjustViewBounds="true"
                         android:background="#013220"
                         android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/ace"
+                        app:srcCompat="@drawable/test_ace"
                         tools:ignore="SpeakableTextPresentCheck" />
 
                     <ImageButton
@@ -272,7 +274,7 @@
                         android:background="#013220"
                         android:cropToPadding="true"
                         android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/_diamonds"
+                        app:srcCompat="@drawable/test_diamonds"
                         tools:ignore="SpeakableTextPresentCheck" />
 
                     <ImageButton
@@ -284,7 +286,7 @@
                         android:background="#013220"
                         android:cropToPadding="true"
                         android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/_diamonds"
+                        app:srcCompat="@drawable/test_diamonds"
                         tools:ignore="SpeakableTextPresentCheck" />
 
                     <ImageButton
@@ -296,7 +298,7 @@
                         android:background="#013220"
                         android:cropToPadding="true"
                         android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/_diamonds"
+                        app:srcCompat="@drawable/test_diamonds"
                         tools:ignore="SpeakableTextPresentCheck" />
 
                     <ImageButton
@@ -308,7 +310,7 @@
                         android:background="#013220"
                         android:cropToPadding="true"
                         android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/_diamonds"
+                        app:srcCompat="@drawable/test_diamonds"
                         tools:ignore="SpeakableTextPresentCheck" />
                 </LinearLayout>
             </HorizontalScrollView>
