@@ -1,5 +1,13 @@
-package com.example.myapplication;
+package com.example.presidentasshole;
 
+/**
+ * @author Margo Brown
+ * @author Claire Porter
+ * @author Renn Torigoe
+ * @author Max Woods
+ *
+ * Translations of integer card ranks to string values.
+ */
 public enum CardValues {
     THREE(3, "THREE"),
     FOUR(4, "FOUR"),

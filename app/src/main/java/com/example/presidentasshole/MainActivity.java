@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.presidentasshole;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,7 +8,12 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-
+/**
+ * @author Margo Brown
+ * @author Claire Porter
+ * @author Renn Torigoe
+ * @author Max Woods
+ */
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -18,12 +23,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // THIS IS FOR TESTING
+        PresidentGame game = new PresidentGame();
         ArrayList<HumanPlayer> players = new ArrayList<HumanPlayer>();
 
-        players.add(new HumanPlayer());
-        players.add(new HumanPlayer());
+        players.add(new HumanPlayer(game));
+        players.add(new HumanPlayer(game));
 
-        PresidentGameState gameState = new PresidentGameState(players);
+        PresidentGameState gameState = new PresidentGameState(players,game);
         Log.i("d", gameState.toString());
 
     }

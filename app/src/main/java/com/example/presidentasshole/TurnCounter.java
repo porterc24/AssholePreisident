@@ -1,8 +1,13 @@
-package com.example.myapplication;
+package com.example.presidentasshole;
+
+import androidx.annotation.NonNull;
 
 /**
+ * @author Max Woods
  * This class keeps track of what turn it is. When the turn counter is greater than
  * the number of players, it resets back to 1.
+ *
+ * IMPORTANT: Turn counter starts at 1!!!
  */
 public class TurnCounter {
     int turn;
@@ -34,4 +39,8 @@ public class TurnCounter {
         return this.turn;
     }
 
+    @Override
+    public String toString() {
+        return "" + this.turn;
+    }
 }

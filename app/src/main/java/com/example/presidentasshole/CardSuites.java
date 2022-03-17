@@ -1,5 +1,13 @@
-package com.example.myapplication;
+package com.example.presidentasshole;
 
+/**
+ * @author Margo Brown
+ * @author Claire Porter
+ * @author Renn Torigoe
+ * @author Max Woods
+ *
+ * Translation of integer card suites to string card values.
+ */
 public enum CardSuites {
     DIAMONDS(1),
     CLUBS(2),
