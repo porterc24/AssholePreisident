@@ -41,14 +41,12 @@ public class CardStack {
 
     public void set(Card card) {
         this.cards = new ArrayList<Card>();
-        card.setSelected(true);
         this.cards.add(card);
     }
 
     public void set(List<Card> card_list) {
         this.cards = new ArrayList<>();
         if (validateCards(card_list)) {
-            setListToSelected(card_list);
             this.cards.addAll(card_list);
         } else {
             Log.i("CardStackError","Unable to add card to stack!");
@@ -61,13 +59,11 @@ public class CardStack {
      * @return TRUE if operation was succesful, FALSE otherwise
      */
     public boolean add(Card card) {
-        if (this.cards == null || this.cards.size() == 0) {
-            card.setSelected(true);
+        if (isEmpty()) {
             set(card);
             return true;
         }
         if (validateCard(card)) {
-            card.setSelected(true);
             this.cards.add(card);
             return true;
         }
@@ -76,7 +72,6 @@ public class CardStack {
 
     public void add(List<Card> card_list) {
         if (validateCards(card_list)) {
-            setListToSelected(card_list);
             this.cards.addAll(card_list);
         }
     }
@@ -84,10 +79,7 @@ public class CardStack {
     // Ensures that this particular card is of the same rank in the deck.
 
     private boolean validateCard(Card card) {
-        if (this.cards == null) {
-            return true;
-        }
-        if (this.cards.size() == 0) {
+        if (isEmpty()) {
             return true;
         }
         // So that the user doesn't select a card they've already
@@ -140,6 +132,9 @@ public class CardStack {
     public Card getCard(int index) { return this.cards.get(index); }
 
     public int getStackSize() {
+        if (isEmpty()) {
+            return 0;
+        }
         return this.cards.size();
     }
 
@@ -161,5 +156,19 @@ public class CardStack {
 
     public void clear() {
         this.cards = null;
+    }
+
+    public boolean isEmpty() {
+        if (this.cards == null) {
+            return true;
+        }
+        if (this.cards.size() == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public ArrayList<Card> getCards() {
+        return this.cards;
     }
 }
