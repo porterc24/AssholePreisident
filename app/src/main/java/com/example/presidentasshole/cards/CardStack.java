@@ -22,6 +22,8 @@ import java.util.List;
  */
 public class CardStack {
 
+    // TODO remove method for deselecting cards
+
     private ArrayList<Card> cards;
 
     public CardStack() {
@@ -39,35 +41,48 @@ public class CardStack {
 
     public void set(Card card) {
         this.cards = new ArrayList<Card>();
+        card.setSelected(true);
         this.cards.add(card);
     }
 
     public void set(List<Card> card_list) {
         this.cards = new ArrayList<>();
         if (validateCards(card_list)) {
+            setListToSelected(card_list);
             this.cards.addAll(card_list);
         } else {
             Log.i("CardStackError","Unable to add card to stack!");
         }
     }
 
-    public void add(Card card) {
+    /**
+     * Adds a card to the deck.
+     * @param card
+     * @return TRUE if operation was succesful, FALSE otherwise
+     */
+    public boolean add(Card card) {
         if (this.cards == null || this.cards.size() == 0) {
+            card.setSelected(true);
             set(card);
-            return;
+            return true;
         }
         if (validateCard(card)) {
+            card.setSelected(true);
             this.cards.add(card);
+            return true;
         }
+        return false;
     }
 
     public void add(List<Card> card_list) {
         if (validateCards(card_list)) {
+            setListToSelected(card_list);
             this.cards.addAll(card_list);
         }
     }
 
     // Ensures that this particular card is of the same rank in the deck.
+
     private boolean validateCard(Card card) {
         if (this.cards == null) {
             return true;
@@ -75,10 +90,15 @@ public class CardStack {
         if (this.cards.size() == 0) {
             return true;
         }
+        // So that the user doesn't select a card they've already
+        // selected....
+        if (card.isSelected()) {
+            return false;
+        }
         return card.getRank() == getStackRank();
     }
-
     // Ensures that every card is of the same rank as each other.
+
     private boolean validateCards(List<Card> card_list) {
         boolean flag = true;
         // Checking if the given card list contains all the same card ranks
@@ -89,6 +109,13 @@ public class CardStack {
             }
         }
         return true;
+    }
+
+    // Sets all of the cards in the given list to be selected
+    private void setListToSelected(List<Card> card_list) {
+        card_list.forEach(c -> {
+            c.setSelected(true);
+        });
     }
 
     public int getStackRank() {

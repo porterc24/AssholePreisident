@@ -1,5 +1,7 @@
 package com.example.presidentasshole.cards;
 
+import androidx.annotation.NonNull;
+
 import com.example.presidentasshole.R;
 
 import java.lang.reflect.Field;
@@ -15,6 +17,7 @@ import java.lang.reflect.Field;
 public class Card {
     private final int rank;
     private final int suite;
+    private boolean selected; // This var is used by the CardImage class for highlighting
 
     public Card(int rank, int suite) {
         this.rank = rank;
@@ -35,10 +38,7 @@ public class Card {
      * @return res ID
      */
     public int toResourceID() {
-        String suite_name = CardSuites.getSuiteName(suite).toLowerCase();
-        String rank_name = CardValues.getCardValuePNG(this.rank);
-
-        return getResId("c_" + rank_name + "_of_" + suite_name);
+        return getResId("c_" + this.toString());
     }
 
     private int getResId(String resName) {
@@ -62,4 +62,19 @@ public class Card {
         return that.getRank() == this.rank && that.getSuite() == this.suite;
     }
 
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    @Override
+    public String toString() {
+        String suite_name = CardSuites.getSuiteName(suite).toLowerCase();
+        String rank_name = CardValues.getCardValuePNG(this.rank);
+
+        return rank_name + "_of_" + suite_name;
+    }
 }

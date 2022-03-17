@@ -71,11 +71,9 @@ public abstract class Player {
     }
 
     public void selectCard(Card card) {
-        this.selectedCards.add(card);
-    }
-
-    public void selectCards(List<Card> cards) {
-        this.selectedCards.set(cards);
+        if (this.selectedCards.add(card)) {
+            this.game.renderCards(this, false);
+        }
     }
 
     /**

@@ -30,30 +30,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // THIS IS FOR TESTING
-        PresidentGame game = new PresidentGame();
+        PresidentGame game = new PresidentGame(findViewById(R.id.PlayerCardScrollViewLayout));
         ArrayList<Player> players = new ArrayList<>();
 
         players.add(new HumanPlayer(game));
         players.add(new HumanPlayer(game));
 
         PresidentGameState gameState = new PresidentGameState(players,game);
+        game.setGameState(gameState);
         gameState.dealCards();
         Log.i("GameStateInfo", gameState.toString());
 
-        LinearLayout pcsvl = findViewById(R.id.PlayerCardScrollViewLayout);
-        pcsvl.removeAllViews();
-
-        Card card = new Card(14,3);
         HumanPlayer player1 = (HumanPlayer) gameState.getPlayerFromTurn();
-
-        player1.getDeck().getCards().forEach(c -> {
-            pcsvl.addView(new CardImage(
-                    getApplicationContext(),
-                    c.toResourceID()
-            ));
-        });
-
-        pcsvl.invalidate();
+        game.renderCards(player1,false);
 
     }
 }
