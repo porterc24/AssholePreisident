@@ -9,7 +9,7 @@ public class PlayCardAction extends GameAction{
 
     private CardStack played_cards; // The cards the player has selected and decided to play
 
-    public PlayCardAction(HumanPlayer sender, CardStack played_cards) {
+    public PlayCardAction(Player sender, CardStack played_cards) {
         super(sender);
         this.played_cards = played_cards;
         sender.getGame().print("Player " + sender.getId() + " attempted to play " + played_cards.toString());

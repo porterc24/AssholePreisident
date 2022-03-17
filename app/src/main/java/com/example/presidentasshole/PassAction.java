@@ -7,7 +7,7 @@ package com.example.presidentasshole;
  */
 public class PassAction extends GameAction {
 
-    public PassAction(HumanPlayer sender) {
+    public PassAction(Player sender) {
         super(sender);
         sender.getGame().print("Player " + sender.getId() + " attempted to pass");
     }

@@ -1,6 +1,6 @@
 package com.example.presidentasshole;
 
-import android.view.View;
+import android.util.Log;
 import android.widget.EditText;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class PresidentGame {
 
-    private ArrayList<HumanPlayer> players;
+    private ArrayList<Player> players;
     private PresidentGameState game_state;
 
     // This is for proj E testing
@@ -21,7 +21,7 @@ public class PresidentGame {
 
 
     // For sending GameState info to players:
-    public void sendInfo(GameAction action, HumanPlayer player) {
+    public void sendInfo(GameAction action, Player player) {
         player.receiveInfo(action);
     }
 
@@ -32,14 +32,14 @@ public class PresidentGame {
 
     // For printing debug to the screen (used for ProjE)
     public void print(String msg) {
-        this.editText.setText(this.editText.getText() + "\n" + msg);
+        Log.i("Game",msg);
     }
 
-    public ArrayList<HumanPlayer> getPlayers() {
+    public ArrayList<Player> getPlayers() {
         return players;
     }
 
-    public void setPlayers(ArrayList<HumanPlayer> players) {
+    public void setPlayers(ArrayList<Player> players) {
         this.players = players;
     }
 

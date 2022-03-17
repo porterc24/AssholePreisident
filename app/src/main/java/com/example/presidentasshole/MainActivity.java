@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
         // THIS IS FOR TESTING
         PresidentGame game = new PresidentGame();
-        ArrayList<HumanPlayer> players = new ArrayList<HumanPlayer>();
+        ArrayList<Player> players = new ArrayList<Player>();
 
         players.add(new HumanPlayer(game));
         players.add(new HumanPlayer(game));

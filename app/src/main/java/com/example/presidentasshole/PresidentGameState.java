@@ -28,7 +28,7 @@ public class PresidentGameState {
     int maxPlayers;
     int currentStage;
 
-    ArrayList<HumanPlayer> players;
+    ArrayList<Player> players;
     TurnCounter currTurn;
     CardStack inPlayPile;
     Deck discardPile;
@@ -52,7 +52,7 @@ public class PresidentGameState {
      * @param players The players to be added to the game
      * @param game The PresidentGame reference
      */
-    public PresidentGameState(ArrayList<HumanPlayer> players, PresidentGame game) {
+    public PresidentGameState(ArrayList<Player> players, PresidentGame game) {
 
         this.players = players;
         this.currentStage = 0;
@@ -100,7 +100,7 @@ public class PresidentGameState {
         masterDeck.generateMasterDeck();
 
 
-        for (HumanPlayer player : this.players) {
+        for (Player player : this.players) {
             this.game.print("Sending deck slice to player " + player.getId());
             for (int i = 0; i < (52 / players.size()); i++) {
                 //selects a random card of the 52 in masterDeck
@@ -130,7 +130,7 @@ public class PresidentGameState {
     public void dealRiggedCards(Deck rigged_deck) {
         state = CurrentState.GAME_SETUP;
 
-        for (HumanPlayer player : this.players) {
+        for (Player player : this.players) {
             for (int i = 0; i < (52 / players.size()); i++) {
                 Card riggedCard = (rigged_deck.getCards().get(i));
                 this.game.sendInfo(new DealCardAction(
@@ -163,7 +163,7 @@ public class PresidentGameState {
         int playerNo = 1;
         StringBuilder info = new StringBuilder("{GameState Info: maxPlayers = " + maxPlayers + ", currTurn = " + currTurn +
                 ", Players [ ");
-        for (HumanPlayer player: players) {
+        for (Player player: players) {
             info.append("(Player " + playerNo + ", ID: " + player.getId() + ", Cards: ");
             for (Card card: player.getDeck().getCards()) {
                 info.append("{ " + CardValues.getCardValue(card.getRank()) + " of " + CardSuites.getSuiteName(card.getSuite()) + " } ");
@@ -185,7 +185,7 @@ public class PresidentGameState {
      * @param player the player's turn to be checked
      * @return TRUE if it's the player's turn, FALSE if not
      */
-    public boolean isPlayerTurn(HumanPlayer player) {
+    public boolean isPlayerTurn(Player player) {
         if (getPlayerFromTurn().getId().equals(player.getId())) {
             return true;
         }
@@ -195,7 +195,7 @@ public class PresidentGameState {
     /**
      * Returns the HumanPlayer who's turn it is.
      */
-    public HumanPlayer getPlayerFromTurn() {
+    public Player getPlayerFromTurn() {
         return this.players.get(currTurn.turn-1); // Turn counter starts from 1
     }
 
@@ -228,19 +228,22 @@ public class PresidentGameState {
      * @param player
      * @return boolean
      */
-    public boolean playCards(HumanPlayer player) {
+    public boolean playCards(Player player) {
         if (isPlayerTurn(player)) {
             inPlayPile.set(player.getSelectedCardStack().cards());
             inPlayPile.print();
+            // The PromptAction is for telling the AI player to make a move:
             this.currTurn.nextTurn();
+            this.game.sendInfo(new PromptAction(null), getPlayerFromTurn());
             return true;
         }
         return false;
     }
 
-    public boolean pass(HumanPlayer player) {
+    public boolean pass(Player player) {
         if (isPlayerTurn(player)) {
             this.currTurn.nextTurn();
+            this.game.sendInfo(new PromptAction(null), getPlayerFromTurn());
             this.game.print("Pass accepted.");
             return true;
         }
@@ -254,6 +257,7 @@ public class PresidentGameState {
         });
     }
 
+    //TODO potential AI behavior?
     /**
      * loops through the players hand and finds the valid cards, then selects an equal amount of a
      * valid card rank (i.e. two 9s, three Kings etc.)
@@ -263,51 +267,51 @@ public class PresidentGameState {
 
     // function is edited for Proj. E, and isn't functional for gameplay
 
-    public CardStack selectCards(HumanPlayer player) {
-        player.getSelectedCardStack().clear();
-        ArrayList<Card> card_buffer = new ArrayList<>();
-
-        // checking if the player is the first to play cards
-        if (inPlayPile.getStackSize() == 0) {
-            // pick a random card from the player's deck
-            Card card = player.getDeck().getCards().get((int) Math.random() * player.getDeck().getCards().size());
-
-            // add all instances of that card to the selectedCards deck
-            for (Card c: player.getDeck().getCards()) {
-                if (c.getRank() == card.getRank()) {
-                    card_buffer.add(c);
-                }
-            }
-        }
-        else {
-            // looping through the player's cards and adding the valid ones to the validCards deck
-            for (Card card: player.getDeck().getCards()) {
-                if (card.getRank() >= inPlayPile.getStackRank()) {
-                    player.getValidCards().addCard(card);
-                }
-            }
-        }
-
-        // repeat while the player's selectedCards doesn't equal the inPlayPile's cards
-        // i.e. the player only selects one higher card when a pair of cards is in play
-
-        while (player.getSelectedCardStack().getStackSize() < inPlayPile.getStackSize()) {
-            // clear the deck from any past iterations of the loop
-            player.getSelectedCardStack().clear();
-
-            // picking a random card from the validCards deck to play
-            Card selectedMoveCard = player.getValidCards().getCards().get((int) (Math.random() * player.getValidCards().getCards().size()));
-
-            // looping through the player's valid cards and adding all of the same rank cards to the
-            // selectedCards deck
-            for (Card card: player.getValidCards().getCards()) {
-                if (card.getRank() == selectedMoveCard.getRank()) {
-                    player.getSelectedCardStack().add(card);
-                }
-            }
-        }
-        return player.getSelectedCardStack();
-    }
+//    public CardStack selectCards(Player player) {
+//        player.getSelectedCardStack().clear();
+//        ArrayList<Card> card_buffer = new ArrayList<>();
+//
+//        // checking if the player is the first to play cards
+//        if (inPlayPile.getStackSize() == 0) {
+//            // pick a random card from the player's deck
+//            Card card = player.getDeck().getCards().get((int) Math.random() * player.getDeck().getCards().size());
+//
+//            // add all instances of that card to the selectedCards deck
+//            for (Card c: player.getDeck().getCards()) {
+//                if (c.getRank() == card.getRank()) {
+//                    card_buffer.add(c);
+//                }
+//            }
+//        }
+//        else {
+//            // looping through the player's cards and adding the valid ones to the validCards deck
+//            for (Card card: player.getDeck().getCards()) {
+//                if (card.getRank() >= inPlayPile.getStackRank()) {
+//                    player.getValidCards().addCard(card);
+//                }
+//            }
+//        }
+//
+//        // repeat while the player's selectedCards doesn't equal the inPlayPile's cards
+//        // i.e. the player only selects one higher card when a pair of cards is in play
+//
+//        while (player.getSelectedCardStack().getStackSize() < inPlayPile.getStackSize()) {
+//            // clear the deck from any past iterations of the loop
+//            player.getSelectedCardStack().clear();
+//
+//            // picking a random card from the validCards deck to play
+//            Card selectedMoveCard = player.getValidCards().getCards().get((int) (Math.random() * player.getValidCards().getCards().size()));
+//
+//            // looping through the player's valid cards and adding all of the same rank cards to the
+//            // selectedCards deck
+//            for (Card card: player.getValidCards().getCards()) {
+//                if (card.getRank() == selectedMoveCard.getRank()) {
+//                    player.getSelectedCardStack().add(card);
+//                }
+//            }
+//        }
+//        return player.getSelectedCardStack();
+//    }
 
     /**
      * This is how the GameState receives information from other Player objects.
@@ -320,7 +324,7 @@ public class PresidentGameState {
 
         // If the player has tried to play a card...
         if (action instanceof PlayCardAction) {
-            HumanPlayer player = action.getSender();
+            Player player = action.getSender();
             PlayCardAction pca = (PlayCardAction) action;
 
             if (isPlayerTurn(player)) {
@@ -352,7 +356,7 @@ public class PresidentGameState {
 
         // If the player passes, go to the next turn
         else if (action instanceof PassAction) {
-            HumanPlayer player = action.getSender();
+            Player player = action.getSender();
             return pass(player);
         } // PassAction
 
@@ -363,7 +367,7 @@ public class PresidentGameState {
         return maxPlayers;
     }
 
-    public ArrayList<HumanPlayer> getPlayers() {
+    public ArrayList<Player> getPlayers() {
         return players;
     }
 
@@ -375,7 +379,7 @@ public class PresidentGameState {
         return discardPile;
     }
 
-    public boolean endGame(ArrayList<HumanPlayer> players){
+    public boolean endGame(ArrayList<Player> players){
         int out = 0;
         for(int i = 0; i < players.size(); i++){
             if(players.get(i).getIsOut() == false) {
@@ -389,7 +393,7 @@ public class PresidentGameState {
         return false;
     }
 
-    public void setPlayers(ArrayList<HumanPlayer> players) {
+    public void setPlayers(ArrayList<Player> players) {
         this.players = players;
         this.maxPlayers = players.size();
         this.currTurn = new TurnCounter(this.maxPlayers);
@@ -399,7 +403,7 @@ public class PresidentGameState {
         this.game = game;
     }
 
-    public void addPlayer(HumanPlayer player) {
+    public void addPlayer(Player player) {
         if (this.players == null || this.players.size() == 0) {
             this.players = new ArrayList<>();
         }

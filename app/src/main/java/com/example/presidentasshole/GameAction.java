@@ -13,13 +13,13 @@ package com.example.presidentasshole;
  */
 public abstract class GameAction {
 
-    private final HumanPlayer sender;
+    private final Player sender;
 
-    public GameAction(HumanPlayer sender) {
+    public GameAction(Player sender) {
         this.sender = sender;
     }
 
-    public HumanPlayer getSender() {
+    public Player getSender() {
         return sender;
     }
 }
