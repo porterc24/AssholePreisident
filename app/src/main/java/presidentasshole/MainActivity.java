@@ -14,6 +14,7 @@ import presidentasshole.cards.CardImage;
 import presidentasshole.players.HumanPlayer;
 import presidentasshole.players.Player;
 import java.util.ArrayList;
+import presidentasshole.R;
 
 /**
  * @author Margo Brown

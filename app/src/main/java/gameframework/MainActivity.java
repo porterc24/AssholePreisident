@@ -1,16 +1,19 @@
-package presidentasshole.gameframework;
+package gameframework;
 
 import gameframework.gameConfiguration.GameConfig;
-import presidentasshole.gameframework.infoMessage.GameState;
+import gameframework.infoMessage.GameState;
+
 
 public class MainActivity extends gameframework.GameMainActivity {
 
 
-    public gameframework.LocalGame createLocalGame(GameState gameState) {
+    @Override
+    public GameConfig createDefaultConfig() {
         return null;
     }
 
-    public GameConfig createDefaultConfig() {
+    @Override
+    public LocalGame createLocalGame(GameState gameState) {
         return null;
     }
 }

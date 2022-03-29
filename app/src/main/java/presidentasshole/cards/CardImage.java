@@ -9,7 +9,8 @@ import android.widget.RelativeLayout;
 import androidx.annotation.NonNull;
 
 import presidentasshole.PresidentGame;
-import R;
+
+import presidentasshole.R;
 
 import java.util.Arrays;
 
