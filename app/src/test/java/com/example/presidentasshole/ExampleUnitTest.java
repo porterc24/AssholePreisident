@@ -1,4 +1,4 @@
-package com.example.presidentasshole;
+package presidentasshole;
 
 import org.junit.Test;
 
