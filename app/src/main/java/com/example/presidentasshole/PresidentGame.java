@@ -7,11 +7,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Space;
+import android.widget.TextView;
 
 import com.example.presidentasshole.actions.GameAction;
 import com.example.presidentasshole.cards.Card;
 import com.example.presidentasshole.cards.CardImage;
 import com.example.presidentasshole.cards.CardStack;
+import com.example.presidentasshole.players.HumanPlayer;
 import com.example.presidentasshole.players.Player;
 
 import java.util.ArrayList;
@@ -29,6 +31,10 @@ public class PresidentGame implements View.OnClickListener {
 
     private RelativeLayout card_layout; // This is the stack of cards on the current player's hand
     private RelativeLayout play_layout; // This is the stack of cards on the play pile
+
+    private TextView turn_text;
+
+    private HumanPlayer tester; // Special player for making the game work with AI
 
     private boolean collapse;
 
@@ -95,6 +101,17 @@ public class PresidentGame implements View.OnClickListener {
         }
     }
 
+    public void updateTurnText(int turn) {
+
+        Log.i("game","turn text: " + turn);
+
+        if (turn == 1) {
+            this.turn_text.setText("Your turn");
+        } else {
+            this.turn_text.setText("Player " + turn + "'s turn...");
+        }
+    }
+
     // This is for proj E testing
     private EditText editText;
 
@@ -129,6 +146,14 @@ public class PresidentGame implements View.OnClickListener {
         this.game_state = game_state;
     }
 
+    public void setTester(HumanPlayer tester) {
+        this.tester = tester;
+    }
+
+    public void setTurnText(TextView turn_text) {
+        this.turn_text = turn_text;
+    }
+
     public void setEditText(EditText editText) {
         this.editText = editText;
     }
@@ -155,6 +180,20 @@ public class PresidentGame implements View.OnClickListener {
 
             //TODO remove this line
             renderPlayPile();
+        }
+
+        // If play button was pressed:
+        if (view.getId() == R.id.play_button) {
+
+            tester.playCards();
+
+            renderCards(tester);
+            renderPlayPile();
+        }
+
+        // If pass button was pressed:
+        if (view.getId() == R.id.pass_button) {
+            tester.pass();
         }
     }
 }

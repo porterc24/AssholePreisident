@@ -24,16 +24,16 @@ import java.util.UUID;
  */
 public abstract class Player {
 
-    private Deck deck;
-    private CardStack selectedCards;
-    private PresidentGame game;
+    protected Deck deck;
+    protected CardStack selectedCards;
+    protected PresidentGame game;
 
-    private int score;
+    protected int score;
 
     // This UUID is automatically generated each time a new HumanPlayer is made.
     // It's useful for comparing two player objects.
-    private final UUID id; // TODO Maybe make a PlayerIDFactory for assigning simple integer IDs instead of UUID?
-    private boolean isOut;
+    protected final UUID id; // TODO Maybe make a PlayerIDFactory for assigning simple integer IDs instead of UUID?
+    protected boolean isOut;
 
     public Player(Deck deck) {
         this.id = UUID.randomUUID();
@@ -91,11 +91,17 @@ public abstract class Player {
      */
     public boolean playCards() {
 
+        // In order to avoid null cards being passed in:
+        if (this.selectedCards.isEmpty()) {
+            return false;
+        }
+
         boolean flag = this.game.sendInfo(new PlayCardAction(this, this.selectedCards));
 
         // If the card was successfully played...
         if (flag) {
             this.selectedCards.cards().forEach(card -> {
+                card.setSelected(false);
                 this.deck.removeCard(card);
             });
             this.selectedCards.clear();

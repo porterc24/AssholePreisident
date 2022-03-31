@@ -248,6 +248,7 @@ public class PresidentGameState {
             inPlayPile.print();
             // The PromptAction is for telling the AI player to make a move:
             this.currTurn.nextTurn();
+            this.game.updateTurnText(this.currTurn.getTurn());
 
             this.game.sendInfo(new PromptAction(null), getPlayerFromTurn());
             this.game.renderPlayPile();
@@ -259,8 +260,10 @@ public class PresidentGameState {
     public boolean pass(Player player) {
         if (isPlayerTurn(player)) {
             this.currTurn.nextTurn();
-            this.game.sendInfo(new PromptAction(null), getPlayerFromTurn());
+            this.game.updateTurnText(this.currTurn.getTurn());
             this.game.print("Pass accepted.");
+
+            this.game.sendInfo(new PromptAction(null), getPlayerFromTurn());
             return true;
         }
         this.game.print("Pass rejected. Not player's turn.");
