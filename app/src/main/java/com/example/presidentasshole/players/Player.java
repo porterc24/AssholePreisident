@@ -105,7 +105,14 @@ public abstract class Player {
                 this.deck.removeCard(card);
             });
             this.selectedCards.clear();
+
+            if (deck.getCards().size() == 0) {
+                this.game.getGameState().game_over = true;
+                this.game.updateTurnText(-1);
+            }
         }
+
+        this.game.renderPlayPile();
 
         return flag;
     }

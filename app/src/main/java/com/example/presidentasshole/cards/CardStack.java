@@ -71,8 +71,15 @@ public class CardStack {
     }
 
     public void add(List<Card> card_list) {
-        if (validateCards(card_list)) {
-            this.cards.addAll(card_list);
+        if (card_list != null) {
+            if (validateCards(card_list)) {
+                // TODO This is garbage and frustrating
+                try {
+                    this.cards.addAll(card_list);
+                } catch (NullPointerException e) {
+                    // dont care
+                }
+            }
         }
     }
 

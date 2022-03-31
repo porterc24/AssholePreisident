@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
         game.renderPlayPile();
         game.setTester(player1);
         game.setTurnText(findViewById(R.id.turn_text));
-        game.updateTurnText(2);
 
         // Button assignment
         Button collapse_button = findViewById(R.id.collapse_button);

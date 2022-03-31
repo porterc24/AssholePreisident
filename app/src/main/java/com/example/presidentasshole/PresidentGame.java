@@ -107,8 +107,10 @@ public class PresidentGame implements View.OnClickListener {
 
         if (turn == 1) {
             this.turn_text.setText("Your turn");
-        } else {
+        } else if (turn > 0) {
             this.turn_text.setText("Player " + turn + "'s turn...");
+        } else if (turn == -1){
+            this.turn_text.setText("Game over!");
         }
     }
 
@@ -186,9 +188,7 @@ public class PresidentGame implements View.OnClickListener {
         if (view.getId() == R.id.play_button) {
 
             tester.playCards();
-
             renderCards(tester);
-            renderPlayPile();
         }
 
         // If pass button was pressed:

@@ -41,6 +41,9 @@ public class PresidentGameState {
     // deep copy ctor!!!!!
     int maxPlayers;
     int currentStage;
+    int passCounter; // keeps track of num of passes
+    Player lastPlayed; // last person who played a card
+    public boolean game_over = false;
 
     ArrayList<Player> players;
     TurnCounter currTurn;
@@ -252,6 +255,10 @@ public class PresidentGameState {
 
             this.game.sendInfo(new PromptAction(null), getPlayerFromTurn());
             this.game.renderPlayPile();
+
+            lastPlayed = player;
+            passCounter = 0;
+
             return true;
         }
         return false;
@@ -264,6 +271,18 @@ public class PresidentGameState {
             this.game.print("Pass accepted.");
 
             this.game.sendInfo(new PromptAction(null), getPlayerFromTurn());
+            passCounter++;
+
+            // Reset play stack if everyone has passed
+            if (passCounter == (this.maxPlayers - 1)) {
+                passCounter = 0;
+                this.inPlayPile = new CardStack();
+                this.game.renderPlayPile();
+            }
+            // Reset game if everyone has passed?
+            if (passCounter == this.maxPlayers) {
+                Log.i("game","Game over!");
+            }
             return true;
         }
         this.game.print("Pass rejected. Not player's turn.");
@@ -341,6 +360,10 @@ public class PresidentGameState {
      */
     public boolean receiveInfo(GameAction action) {
 
+        if (game_over) {
+            return false;
+        }
+
         // If the player has tried to play a card...
         if (action instanceof PlayCardAction) {
             Player player = action.getSender();
@@ -349,6 +372,18 @@ public class PresidentGameState {
             if (isPlayerTurn(player)) {
                 if (this.inPlayPile.getStackSize() == 0) { // If it's the very first turn...
                     this.game.print("Playing first card.");
+                    playCards(player);
+                    return true;
+                }
+
+                // If there's a 2 on the deck (card reset):
+                if (this.inPlayPile.getStackRank() == 15) {
+                    playCards(player);
+                    return true;
+                }
+
+                // If they play a 2 (card reset):
+                if (pca.getPlayedCards().getStackRank() == 15) {
                     playCards(player);
                     return true;
                 }
