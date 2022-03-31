@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_main);
-
+/*
         // THIS IS FOR TESTING
         PresidentGame game = new PresidentGame((RelativeLayout) findViewById(R.id.PlayerCardScrollViewLayout));
         ArrayList<Player> players = new ArrayList<>();
@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
         // Button assignment
         Button collapse_button = findViewById(R.id.collapse_button);
         collapse_button.setOnClickListener(game);
+
+ */
 
     }
 }

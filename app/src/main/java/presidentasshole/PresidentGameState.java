@@ -2,6 +2,7 @@ package presidentasshole;
 
 import android.util.Log;
 
+import gameframework.infoMessage.GameState;
 import presidentasshole.actions.ClearDeckAction;
 import presidentasshole.actions.DealCardAction;
 import presidentasshole.actions.GameAction;
@@ -16,6 +17,7 @@ import presidentasshole.cards.Deck;
 import presidentasshole.players.Player;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * @author Margo Brown
@@ -28,78 +30,62 @@ import java.util.ArrayList;
  * - The cards in play
  * - The stage of the game (setup, play, etc.)
  *
- * Information is transferred between the GameState and the Player through the PresidentGame, which
- * uses the sendInfo() method to send GameAction objects. It's kind of like how two clients send
- * each other packets via a server.
  *
  */
-public class PresidentGameState {
-    // TODO
-    // implement a method that deals with invalid moves (when a player cannot play a card)
+public class PresidentGameState extends GameState {
 
-    // IMPORTANT: If you add a new instance variable, make sure you update the
-    // deep copy ctor!!!!!
-    int maxPlayers;
-    int currentStage;
-
-    ArrayList<Player> players;
-    TurnCounter currTurn;
-    CardStack inPlayPile;
-    Deck discardPile;
-    CurrentState state;
-    PresidentGame game;
+    public int maxPlayers;
+    public int playerTurn;
+    //TurnCounter currTurn;
+    public ArrayList<ArrayList<Card>> playerDecks;
+    public ArrayList<Card> masterDeck;
+    public CardStack playPile;
+    public boolean[] playerStatus;
 
     /**
-     * Default ctor. Second one is definitely better, though.
+     * PresidentGameState: our constructor, sets up the game by creating the master deck, player decks, and playPile
+     * also creates and sets the playerStatus boolean array to true(s), etc.
+     * @param playerAmt
      */
-    public PresidentGameState() {
-        this.currentStage = 0;
-        this.discardPile = new Deck();
-        this.currTurn = new TurnCounter(this.maxPlayers);
-        this.inPlayPile = new CardStack();
-
-        state = CurrentState.INIT_ARRAYS;
+    public PresidentGameState(int playerAmt) {
+        super();
+        this.maxPlayers = 4;
+        this.playerTurn = 0;
+        this.playerDecks = new ArrayList<>(maxPlayers);
+        this.masterDeck = new ArrayList<>(52);
+        this.playPile = new CardStack();
+        this.playerStatus = new boolean[] {true, true, true, true};
+        for(int i = 0; i<playerAmt; i++){
+            this.playerDecks.add(new ArrayList<>(13));
+        }
+        this.dealCards();
     }
 
     /**
-     * Setps up a new GameState.
-     * @param players The players to be added to the game
-     * @param game The PresidentGame reference
+     * PresidentGameState Deep Copy constructor
+     * @param orig: the target instance of PGS to deep copy
      */
-    public PresidentGameState(ArrayList<Player> players, PresidentGame game) {
-
-        this.players = players;
-        this.currentStage = 0;
-        this.maxPlayers = players.size();
-        this.discardPile = new Deck();
-        this.game = game;
-        this.currTurn = new TurnCounter(this.maxPlayers);
-
-        // At the start of the game, the first player is the first person to put down a card.
-        // The first card is set to null so that the game knows it's valid for that player to
-        // put down a card on the first turn.
-        this.inPlayPile = new CardStack();
-
-        state = CurrentState.INIT_ARRAYS;
-
-    }
-
-    // Deep copy ctor for PresidentGameState
     public PresidentGameState(PresidentGameState orig) {
-
-        this.players = orig.players; // Players should not be deep copied (passed by ref)
-
-        // Mutable primitives
+        if(orig == null){
+            return;
+        }
         this.maxPlayers = orig.maxPlayers;
-        this.currentStage = orig.currentStage;
+        this.playerTurn = orig.playerTurn;
+        this.playerDecks = new ArrayList<>(orig.maxPlayers);
+        this.playPile = new CardStack(orig.playPile);
+        this.masterDeck = new ArrayList<>(orig.masterDeck);
+        this.playerStatus = new boolean[orig.playerStatus.length];
+        for (int i = 0; i < orig.playerStatus.length; i++) {
+            playerStatus[i] = orig.playerStatus[i];
+        }
 
-        // Mutable class types
-        this.discardPile = new Deck(orig.discardPile);
-        this.currTurn = new TurnCounter(orig.currTurn);
-        this.inPlayPile = new CardStack(orig.inPlayPile);
-        this.game = orig.game;
+        for (int i = 0; i < orig.playerDecks.size(); i++) {
+            playerDecks.add(new ArrayList<>(7));
+            for (int j = 0; j < orig.playerDecks.get(i).size(); j++ ) {
+                playerDecks.get(i).add(new Card(orig.playerDecks.get(i).get(j)));
+            }
+        }
 
-        state = CurrentState.INIT_OBJECTS;
     }
 
     /**
@@ -108,64 +94,49 @@ public class PresidentGameState {
      * it takes out slices of that master deck and deals them
      * out to the players.
      */
-    public void dealCards() {
-        state = CurrentState.GAME_SETUP;
-        Deck masterDeck = new Deck(new ArrayList<Card>());
-        masterDeck.generateMasterDeck();
 
-
-        for (Player player : this.players) {
-            this.game.print("Sending deck slice to player " + player.getId());
-            for (int i = 0; i < (52 / players.size()); i++) {
-                //selects a random card of the 52 in masterDeck
-                Card randomCard = (masterDeck.getCards().get((int) Math.random() * masterDeck.MAX_CARDS));
-
-                this.game.sendInfo(new DealCardAction(
-                        null,
-                        randomCard
-                ), player);
-                masterDeck.getCards().remove(randomCard);
-                //Log.i("DECKS", "Value of i: " + i);
-            }
-        }
-
-        // THIS IS FOR TESTING/DEBUG
-        this.players.forEach(p -> {
-            Log.i("DECKS","PLAYER: " + p.getDeck().toString());
-        });
-
-        state = CurrentState.MAIN_PLAY;
+    public boolean gameSetup(){
+        return false;
     }
 
     /**
-     * Instead of generating a master deck, this method takes a pre-made deck and deals it out
-     * to the players. Useful for testing.
+     * generateMasterDeck creates a new deck containing all of the the card values needed
+     * and maximum 52 cards.
+     * @return
      */
-    public void dealRiggedCards(Deck rigged_deck) {
-        state = CurrentState.GAME_SETUP;
-
-        for (Player player : this.players) {
-            for (int i = 0; i < (52 / players.size()); i++) {
-                Card riggedCard = (rigged_deck.getCards().get(i));
-                this.game.sendInfo(new DealCardAction(
-                        null,
-                        riggedCard
-                ), player);
-                //Log.i("DECKS", "Value of i: " + i);
+    public boolean generateMasterDeck() {
+        for (int suite = 1; suite <= 4; suite ++) {
+            // Inner loop is for ranks
+            for (int rank = 1; rank <= 13; rank ++) {
+                Log.i("President","SUITE: " + suite + " RANK: " + rank); // DEBUG
+                masterDeck.add(new Card(rank+2,suite)); // +2 is necessary (see CardValues)
+                Collections.shuffle(masterDeck);
+                return true;
             }
         }
-
-        // THIS IS FOR TESTING/DEBUG
-        this.players.forEach(p -> {
-            Log.i("RIGGED","PLAYER: " + p.getDeck().toString());
-        });
-
-        state = CurrentState.MAIN_PLAY;
+        return false;
     }
 
-    public CardStack getPlayPile() {
-        return inPlayPile;
+
+    /**
+     * deals the cards to each players hands
+     * @return if it was completed
+     */
+    public boolean dealCards() {
+        if(generateMasterDeck()){
+            for(int i = 0; i < maxPlayers; i ++) {
+                for(int j = 0; i <= 12; i ++ ){
+                    moveStart(this.masterDeck.get(j), this.masterDeck, this.playerDecks.get(i));
+                }
+            }
+            for(int i = 0; i < maxPlayers; i ++) {
+                Collections.shuffle(playerDecks.get(i));
+            }
+            return true;
+        }
+        return false;
     }
+
 
     /**
      * This method prints out returns a String with the attributes of the current PresidentGameState
@@ -174,160 +145,62 @@ public class PresidentGameState {
 
     @Override
     public String toString() {
-        int playerNo = 1;
-        StringBuilder info = new StringBuilder("{GameState Info: maxPlayers = " + maxPlayers + ", currTurn = " + currTurn +
-                ", Players [ ");
-        for (Player player: players) {
-            info.append("(Player " + playerNo + ", ID: " + player.getId() + ", Cards: ");
-            for (Card card: player.getDeck().getCards()) {
-                info.append("{ " + CardValues.getCardValue(card.getRank()) + " of " + CardSuites.getSuiteName(card.getSuite()) + " } ");
-            }
-            info.append(", " + "Points: " + player.getScore() + " ) \n");
-            playerNo++;
-        }
+      return "finish this later!";
+    }
 
-        info.append(" ]");
-        info.append("\n");
-        info.append("[PlayPile Info: ");
-        info.append(this.inPlayPile.toString());
-        info.append("]}");
-        return info.toString();
+
+    /**
+     * returns which players turn it is
+      */
+    public int getPlayerTurn() { return playerTurn; }
+
+    /**
+     * returns an int on who as won the game if over,
+     * or -1 if nobody has won yet.
+     */
+    public int gameOver() {
+        return endGame(playerStatus);
     }
 
     /**
-     * This method checks if it's a player's turn.
-     * @param player the player's turn to be checked
-     * @return TRUE if it's the player's turn, FALSE if not
+     * Tests if the game is over
+     * @param playerStatus - an array indicated which players are in the game (true) and which are
+     *                     out (false)
+     * @return - index # of winner if there is only one in (true) player in playerStatus, -1 if there are more
+     * than one players still playing
      */
-    public boolean isPlayerTurn(Player player) {
-        if (getPlayerFromTurn().getId().equals(player.getId())) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Returns the HumanPlayer who's turn it is.
-     */
-    public Player getPlayerFromTurn() {
-        return this.players.get(currTurn.turn-1); // Turn counter starts from 1
-    }
-
-    /**
-     * checks that the first index of the passed deck (selectedCards)'s rank is higher than the
-     * first index of the inPlayPile's rank, and whether the length of the (selectedCards) is longer
-     * than or equal to the inPlayPile's length
-     *
-     * inPlayPile is a max length 4, so
-     * @param deck
-     * @return
-     */
-
-    // potential bug - currently initializing inPlayPile with a length of 0, may mess up when
-
-    public boolean isValidMove(Deck deck) {
-        //TODO
-        if (deck.getCards().get(0).getRank() > inPlayPile.getStackRank()) {
-            if (deck.getCards().size() >= inPlayPile.getStackSize()) {
-                return true;
+    public int endGame(boolean[] playerStatus){
+        int out = 0;
+        for(int i = 0; i < playerStatus.length; i++){
+            if(playerStatus[i] == false) {
+                out++;
             }
         }
-        // cannot play cards, illegal move
-        // with this implementation shouldn't be running
-        return false;
+        if(out == 3){
+            for (int i = 0; i < playerStatus.length; i++) {
+                if (playerStatus[i] == true) {
+                    return i;
+                }
+            }
+        }
+        return -1;
     }
 
-    /**
-     * "plays" the card to the top of the inPlayPile, returns true if successful, else returns false
-     * @param player
-     * @return boolean
-     */
-    public boolean playCards(Player player) {
-        if (isPlayerTurn(player)) {
-            inPlayPile.set(player.getSelectedCardStack().cards());
-            inPlayPile.print();
-            // The PromptAction is for telling the AI player to make a move:
-            this.currTurn.nextTurn();
 
-            this.game.sendInfo(new PromptAction(null), getPlayerFromTurn());
-            this.game.renderPlayPile();
+
+
+    public boolean isValidMove() {
+        if ((playerDecks.get(playerTurn) != null) && playerStatus[playerTurn]) {
             return true;
         }
         return false;
     }
 
-    public boolean pass(Player player) {
-        if (isPlayerTurn(player)) {
-            this.currTurn.nextTurn();
-            this.game.sendInfo(new PromptAction(null), getPlayerFromTurn());
-            this.game.print("Pass accepted.");
-            return true;
-        }
-        this.game.print("Pass rejected. Not player's turn.");
+
+    public boolean playCard(int playerTurn, CardValues value, ArrayList<Card> source, ArrayList<Card> dest) {
+       //TODO make a working playcard method
         return false;
     }
-
-    public void clearDecks() {
-        this.players.forEach(p -> {
-            this.game.sendInfo(new ClearDeckAction(null), p);
-        });
-    }
-
-    //TODO potential AI behavior?
-    /**
-     * loops through the players hand and finds the valid cards, then selects an equal amount of a
-     * valid card rank (i.e. two 9s, three Kings etc.)
-     * @param player
-     * @return Deck
-     */
-
-    // function is edited for Proj. E, and isn't functional for gameplay
-
-//    public CardStack selectCards(Player player) {
-//        player.getSelectedCardStack().clear();
-//        ArrayList<Card> card_buffer = new ArrayList<>();
-//
-//        // checking if the player is the first to play cards
-//        if (inPlayPile.getStackSize() == 0) {
-//            // pick a random card from the player's deck
-//            Card card = player.getDeck().getCards().get((int) Math.random() * player.getDeck().getCards().size());
-//
-//            // add all instances of that card to the selectedCards deck
-//            for (Card c: player.getDeck().getCards()) {
-//                if (c.getRank() == card.getRank()) {
-//                    card_buffer.add(c);
-//                }
-//            }
-//        }
-//        else {
-//            // looping through the player's cards and adding the valid ones to the validCards deck
-//            for (Card card: player.getDeck().getCards()) {
-//                if (card.getRank() >= inPlayPile.getStackRank()) {
-//                    player.getValidCards().addCard(card);
-//                }
-//            }
-//        }
-//
-//        // repeat while the player's selectedCards doesn't equal the inPlayPile's cards
-//        // i.e. the player only selects one higher card when a pair of cards is in play
-//
-//        while (player.getSelectedCardStack().getStackSize() < inPlayPile.getStackSize()) {
-//            // clear the deck from any past iterations of the loop
-//            player.getSelectedCardStack().clear();
-//
-//            // picking a random card from the validCards deck to play
-//            Card selectedMoveCard = player.getValidCards().getCards().get((int) (Math.random() * player.getValidCards().getCards().size()));
-//
-//            // looping through the player's valid cards and adding all of the same rank cards to the
-//            // selectedCards deck
-//            for (Card card: player.getValidCards().getCards()) {
-//                if (card.getRank() == selectedMoveCard.getRank()) {
-//                    player.getSelectedCardStack().add(card);
-//                }
-//            }
-//        }
-//        return player.getSelectedCardStack();
-//    }
 
     /**
      * This is how the GameState receives information from other Player objects.
@@ -335,7 +208,7 @@ public class PresidentGameState {
      * in this game.
      * @param action The GameAction the player has made.
      * @return Whether or not the move was valid or not
-     */
+
     public boolean receiveInfo(GameAction action) {
 
         // If the player has tried to play a card...
@@ -378,53 +251,57 @@ public class PresidentGameState {
 
         return false;
     } // receiveInfo
+*/
 
     public int getMaxPlayers() {
         return maxPlayers;
     }
 
-    public ArrayList<Player> getPlayers() {
-        return players;
-    }
-
-    public TurnCounter getCurrTurn() {
-        return currTurn;
-    }
-
-    public Deck getDiscardPile() {
-        return discardPile;
-    }
-
-    public boolean endGame(ArrayList<Player> players){
-        int out = 0;
-        for(int i = 0; i < players.size(); i++){
-            if(players.get(i).getIsOut() == false) {
-                out++;
-            }
-        }
-        if(out == players.size() - 1){
-            state = CurrentState.GAME_END;
+    /**
+     * The helper function to move a card obj from src to dest arrayLists iff it contains that card
+     * @param card - card object to be moved
+     * @param src - source ArrayList
+     * @param dest - destination ArrayLIst
+     * @return - returns true if it was able to move, false if not
+     */
+    public boolean moveStart(Card card, ArrayList<Card> src, ArrayList<Card> dest){
+        if(src.contains(card)){
+            dest.add(card);
+            src.remove(card);
             return true;
         }
         return false;
     }
 
-    public void setPlayers(ArrayList<Player> players) {
-        this.players = players;
-        this.maxPlayers = players.size();
-        this.currTurn = new TurnCounter(this.maxPlayers);
-    }
 
-    public void setGame(PresidentGame game) {
-        this.game = game;
-    }
-
-    public void addPlayer(Player player) {
-        if (this.players == null || this.players.size() == 0) {
-            this.players = new ArrayList<>();
+    /**
+     * getter method to get the index of a card in an arrayList
+     * @param type - the cardtype in mind to search for an object for
+     * @param src - the source arrayList to look in
+     * @return - returns the index that the card object is located at, or -1 if it is not found in src
+     */
+    public int getCardIndex(CardValues type, ArrayList<Card> src) {
+        for(int index = 0; index < src.size(); index++) {
+            if(src.get(index).getRank() == type.value) {
+                return index;
+            }
         }
-        this.players.add(player);
-        this.maxPlayers = this.players.size();
-        this.currTurn = new TurnCounter(this.maxPlayers);
+        return -1;
     }
+
+    /**
+     * gets a card object of a certain type from a source arrayLIst
+     * @param type - cardtype to search for
+     * @param src - the source arrayList to search in
+     * @return - retruns the card Object if it exists, null if it doesn't exist
+     */
+    public Card getCard(CardValues value, ArrayList<Card> src){
+        for(Card card: src){
+            if(card.getRank() == value.value){
+                return card;
+            }
+        }
+        return null;
+    }
+
 }
