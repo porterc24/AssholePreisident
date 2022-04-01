@@ -106,6 +106,7 @@ public abstract class Player {
             });
             this.selectedCards.clear();
 
+            // If you've won the game....
             if (deck.getCards().size() == 0) {
                 this.game.getGameState().game_over = true;
                 this.game.updateTurnText(-1);

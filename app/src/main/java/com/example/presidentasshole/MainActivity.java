@@ -19,6 +19,11 @@ import java.util.ArrayList;
  * @author Renn Torigoe
  * @author Max Woods
  *
+ * Beware of bugs! This is a pretty sloppily made version of the game. The game framework
+ * implementation leaves a lot to be desired (many features of it are in the wrong place/missing).
+ * These will certainly be fixed by the next project due-date.
+ *
+ * For now, however, it works :^).
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -29,7 +34,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // THIS IS FOR TESTING
-        PresidentGame game = new PresidentGame((RelativeLayout) findViewById(R.id.PlayerCardScrollViewLayout),
+        PresidentGame game = new PresidentGame(
+                (RelativeLayout) findViewById(R.id.PlayerCardScrollViewLayout),
                 (RelativeLayout) findViewById(R.id.PlayPileLayout));
         ArrayList<Player> players = new ArrayList<>();
 

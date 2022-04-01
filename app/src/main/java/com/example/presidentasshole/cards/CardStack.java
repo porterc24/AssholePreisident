@@ -73,7 +73,7 @@ public class CardStack {
     public void add(List<Card> card_list) {
         if (card_list != null) {
             if (validateCards(card_list)) {
-                // TODO This is garbage and frustrating
+                // TODO This is garbage and stupid but I don't know why it throws a NPE
                 try {
                     this.cards.addAll(card_list);
                 } catch (NullPointerException e) {

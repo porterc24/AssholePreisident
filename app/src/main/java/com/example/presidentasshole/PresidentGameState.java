@@ -154,7 +154,6 @@ public class PresidentGameState {
                         null,
                         riggedCard
                 ), player);
-                //Log.i("DECKS", "Value of i: " + i);
             }
         }
 
@@ -168,33 +167,6 @@ public class PresidentGameState {
 
     public CardStack getPlayPile() {
         return inPlayPile;
-    }
-
-    /**
-     * This method prints out returns a String with the attributes of the current PresidentGameState
-     * @return info.toString() returns the StringBuilder with the info
-     */
-
-    @Override
-    public String toString() {
-        int playerNo = 1;
-        StringBuilder info = new StringBuilder("{GameState Info: maxPlayers = " + maxPlayers + ", currTurn = " + currTurn +
-                ", Players [ ");
-        for (Player player: players) {
-            info.append("(Player " + playerNo + ", ID: " + player.getId() + ", Cards: ");
-            for (Card card: player.getDeck().getCards()) {
-                info.append("{ " + CardValues.getCardValue(card.getRank()) + " of " + CardSuites.getSuiteName(card.getSuite()) + " } ");
-            }
-            info.append(", " + "Points: " + player.getScore() + " ) \n");
-            playerNo++;
-        }
-
-        info.append(" ]");
-        info.append("\n");
-        info.append("[PlayPile Info: ");
-        info.append(this.inPlayPile.toString());
-        info.append("]}");
-        return info.toString();
     }
 
     /**
@@ -294,62 +266,6 @@ public class PresidentGameState {
             this.game.sendInfo(new ClearDeckAction(null), p);
         });
     }
-
-    //TODO potential AI behavior?
-    /**
-     * loops through the players hand and finds the valid cards, then selects an equal amount of a
-     * valid card rank (i.e. two 9s, three Kings etc.)
-     * @param player
-     * @return Deck
-     */
-
-    // function is edited for Proj. E, and isn't functional for gameplay
-
-//    public CardStack selectCards(Player player) {
-//        player.getSelectedCardStack().clear();
-//        ArrayList<Card> card_buffer = new ArrayList<>();
-//
-//        // checking if the player is the first to play cards
-//        if (inPlayPile.getStackSize() == 0) {
-//            // pick a random card from the player's deck
-//            Card card = player.getDeck().getCards().get((int) Math.random() * player.getDeck().getCards().size());
-//
-//            // add all instances of that card to the selectedCards deck
-//            for (Card c: player.getDeck().getCards()) {
-//                if (c.getRank() == card.getRank()) {
-//                    card_buffer.add(c);
-//                }
-//            }
-//        }
-//        else {
-//            // looping through the player's cards and adding the valid ones to the validCards deck
-//            for (Card card: player.getDeck().getCards()) {
-//                if (card.getRank() >= inPlayPile.getStackRank()) {
-//                    player.getValidCards().addCard(card);
-//                }
-//            }
-//        }
-//
-//        // repeat while the player's selectedCards doesn't equal the inPlayPile's cards
-//        // i.e. the player only selects one higher card when a pair of cards is in play
-//
-//        while (player.getSelectedCardStack().getStackSize() < inPlayPile.getStackSize()) {
-//            // clear the deck from any past iterations of the loop
-//            player.getSelectedCardStack().clear();
-//
-//            // picking a random card from the validCards deck to play
-//            Card selectedMoveCard = player.getValidCards().getCards().get((int) (Math.random() * player.getValidCards().getCards().size()));
-//
-//            // looping through the player's valid cards and adding all of the same rank cards to the
-//            // selectedCards deck
-//            for (Card card: player.getValidCards().getCards()) {
-//                if (card.getRank() == selectedMoveCard.getRank()) {
-//                    player.getSelectedCardStack().add(card);
-//                }
-//            }
-//        }
-//        return player.getSelectedCardStack();
-//    }
 
     /**
      * This is how the GameState receives information from other Player objects.
@@ -464,5 +380,32 @@ public class PresidentGameState {
         this.players.add(player);
         this.maxPlayers = this.players.size();
         this.currTurn = new TurnCounter(this.maxPlayers);
+    }
+
+    /**
+     * This method prints out returns a String with the attributes of the current PresidentGameState
+     * @return info.toString() returns the StringBuilder with the info
+     */
+
+    @Override
+    public String toString() {
+        int playerNo = 1;
+        StringBuilder info = new StringBuilder("{GameState Info: maxPlayers = " + maxPlayers + ", currTurn = " + currTurn +
+                ", Players [ ");
+        for (Player player: players) {
+            info.append("(Player " + playerNo + ", ID: " + player.getId() + ", Cards: ");
+            for (Card card: player.getDeck().getCards()) {
+                info.append("{ " + CardValues.getCardValue(card.getRank()) + " of " + CardSuites.getSuiteName(card.getSuite()) + " } ");
+            }
+            info.append(", " + "Points: " + player.getScore() + " ) \n");
+            playerNo++;
+        }
+
+        info.append(" ]");
+        info.append("\n");
+        info.append("[PlayPile Info: ");
+        info.append(this.inPlayPile.toString());
+        info.append("]}");
+        return info.toString();
     }
 }

@@ -110,7 +110,8 @@ public class PresidentGame implements View.OnClickListener {
         } else if (turn > 0) {
             this.turn_text.setText("Player " + turn + "'s turn...");
         } else if (turn == -1){
-            this.turn_text.setText("Game over!");
+            int real_turn = game_state.getCurrTurn().getPrevTurn();
+            this.turn_text.setText("Player " + real_turn + " wins!");
         }
     }
 

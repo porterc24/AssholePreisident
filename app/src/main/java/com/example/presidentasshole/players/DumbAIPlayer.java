@@ -13,6 +13,19 @@ import com.example.presidentasshole.cards.CardStack;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * @author Margo Brown
+ * @author Claire Porter
+ * @author Renn Torigoe
+ * @author Max Woods
+ *
+ * This guy simply picks the lowest value card he can on his turn. For more information about
+ * the logic, see the decide() method.
+ *
+ * The LocalGame sends a PromptAction to a Player at the beginning of their turn, to let them know
+ * that it's their turn to go. The Dumb AI has an artificial wait that occurs before it makes a
+ * decision about what card to play.
+ */
 public class DumbAIPlayer extends Player {
 
     public DumbAIPlayer(PresidentGame game) {
@@ -23,12 +36,13 @@ public class DumbAIPlayer extends Player {
     public void receiveInfo(GameAction action) {
         super.receiveInfo(action);
 
-        // TODO AI behavior
+        // TODO citation
         if (action instanceof PromptAction) {
 
             Random rand = new Random();
             long time = 500 + rand.nextInt(500);
 
+            // Random delay: decide() method does the actual action
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -40,6 +54,16 @@ public class DumbAIPlayer extends Player {
         }
     }
 
+    /**
+     * Dumb AI logic for deciding which card to play at their turn. It does this by
+     * simply picking the lowest value card/stack of cards it can possibly play.
+     *
+     * If it can't play any of those cards, it tries to play a 2.
+     *
+     * If none of the options work, it passes.
+     *
+     * Uses helper methods pickRandCard, pickMinCard, pickMinCardStack
+     */
     private void decide() {
 
         int min_stack = this.game.getGameState().getPlayPile().getStackSize();
@@ -58,7 +82,8 @@ public class DumbAIPlayer extends Player {
             }
             selectCard(min_card);
         }
-        if (!playCards() || min_stack > 1) {
+
+        if (min_stack > 1) {
             this.selectedCards.clear();
             CardStack best_stack = pickMinCardStack();
             if (!best_stack.isEmpty()) {
@@ -67,13 +92,22 @@ public class DumbAIPlayer extends Player {
         }
 
         if (!playCards()) {
-
             pass();
         }
 
     }
 
+    /**
+     * Picks a random card out of the deck. Used when there are no cards on the playpile.
+     * @return a random card
+     */
     private Card pickRandCard() {
+
+        if (this.deck.getCards().size() == 1) {
+            return this.deck.getCards().get(0);
+        } else if (this.deck.getCards().size() == 0) {
+            return null;
+        }
 
         Random rand = new Random();
         int rand_card = rand.nextInt(this.deck.getCards().size()-1);
@@ -85,7 +119,17 @@ public class DumbAIPlayer extends Player {
         return this.deck.getCards().get(0);
     }
 
+    /**
+     * Picks the smallest value card that can be played.
+     * @return smallest card value
+     */
     private Card pickMinCard() {
+
+        if (this.deck.getCards().size() == 1) {
+            return this.deck.getCards().get(0);
+        } else if (this.deck.getCards().size() == 0) {
+            return null;
+        }
 
         int min_rank = this.game.getGameState().getPlayPile().getStackRank();
 
@@ -108,20 +152,17 @@ public class DumbAIPlayer extends Player {
         return min_card;
     }
 
-    private ArrayList<Card> pickSimilarCards(int rank) {
-        ArrayList<Card> cards = new ArrayList<>();
-
-        for (int i = 0; i < this.deck.getCards().size(); i++) {
-            Card card = this.deck.getCards().get(i);
-
-            if (card.getRank() == rank) {
-                cards.add(card);
-            }
-        }
-        return cards;
-    }
-
+    /**
+     * Picks the smallest rank of a stack of cards > 1 that can be played.
+     * It does this by first finding all of the cards of the same rank in the deck and putting
+     * them in card stacks. The card stacks are then all compared to find the minimum.
+     * @return minimum stack of cards that can be played
+     */
     private CardStack pickMinCardStack() {
+
+        if (this.deck.getCards().size() == 0) {
+            return null;
+        }
 
         ArrayList<CardStack> stacks = new ArrayList<>();
         int min_rank = this.game.getGameState().getPlayPile().getStackRank();
@@ -150,16 +191,19 @@ public class DumbAIPlayer extends Player {
         }
 
         // Now check which stack has the best rank and size to play
-        CardStack best_stack = stacks.get(0);
-        for (int i = 0; i < stacks.size(); i++) {
-            CardStack stack = stacks.get(i);
-            if (stack.getStackRank() < best_stack.getStackRank()
-            &&  stack.getStackRank() > min_rank
-            &&  stack.getStackSize() >= min_stack) {
-                best_stack = stack;
+        if (!stacks.isEmpty()) {
+            CardStack best_stack = stacks.get(0);
+            for (int i = 0; i < stacks.size(); i++) {
+                CardStack stack = stacks.get(i);
+                if (stack.getStackRank() < best_stack.getStackRank()
+                        && stack.getStackRank() > min_rank
+                        && stack.getStackSize() >= min_stack) {
+                    best_stack = stack;
+                }
             }
+            return best_stack;
         }
-        return best_stack;
+        return null;
     }
 
     @Override

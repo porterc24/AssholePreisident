@@ -31,6 +31,14 @@ public class TurnCounter {
         }
     }
 
+    public int getPrevTurn() {
+        int prev_turn = this.turn - 1;
+        if (prev_turn == 0) {
+            prev_turn = 1;
+        }
+        return prev_turn;
+    }
+
     public void reset() {
         this.turn = 1;
     }
