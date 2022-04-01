@@ -36,13 +36,21 @@ public class DumbAIPlayer extends Player {
     public void receiveInfo(GameAction action) {
         super.receiveInfo(action);
 
-        // TODO citation
         if (action instanceof PromptAction) {
 
             Random rand = new Random();
             long time = 500 + rand.nextInt(500);
 
-            // Random delay: decide() method does the actual action
+            /**
+             * External Citation
+             *   Date: 31 March 2022
+             *   Problem: Thread.sleep() freezes the GUI
+             *
+             *   Resource:
+             *     https://stackoverflow.com/questions/1520887/
+             *     how-to-pause-sleep-thread-or-process-in-android
+             *   Solution: I used the example code from this post.
+             */
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
