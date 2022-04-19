@@ -1,200 +1,360 @@
 package com.example.presidentasshole;
 
+import android.content.DialogInterface;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.Space;
-import android.widget.TextView;
 
-import com.example.presidentasshole.actions.GameAction;
 import com.example.presidentasshole.cards.Card;
 import com.example.presidentasshole.cards.CardImage;
 import com.example.presidentasshole.cards.CardStack;
-import com.example.presidentasshole.players.HumanPlayer;
-import com.example.presidentasshole.players.Player;
+import com.example.presidentasshole.cards.Deck;
+import com.example.presidentasshole.game.GameMainActivity;
+import com.example.presidentasshole.game.GamePlayer;
+import com.example.presidentasshole.game.LocalGame;
+import com.example.presidentasshole.game.actionMsg.GameAction;
+import com.example.presidentasshole.game.config.GameConfig;
+import com.example.presidentasshole.game.util.MessageBox;
 
-import java.util.ArrayList;
+public class PresidentGame extends LocalGame implements DialogInterface.OnClickListener {
 
-/**
- * @author Max Woods
- * This game class manages basically everything. It handles the sending of information between
- * GameStates and players using the sendInfo() method.
- *
- */
-public class PresidentGame implements View.OnClickListener {
+    private final int NUM_PLAYERS;
 
-    private ArrayList<Player> players;
-    private PresidentGameState game_state;
+    private GameConfig config;
+    private PresidentGameState golden_state;
+    private GameMainActivity activity;
 
-    private RelativeLayout card_layout; // This is the stack of cards on the current player's hand
-    private RelativeLayout play_layout; // This is the stack of cards on the play pile
-
-    private TextView turn_text;
-
-    private HumanPlayer tester; // Special player for making the game work with AI
-
-    private boolean collapse;
-
-    public PresidentGame(RelativeLayout card_view, RelativeLayout play_view) {
-        this.card_layout = card_view;
-        this.play_layout = play_view;
-    }
-
-    /**
-     * Re-renders the cards at the bottom of the screen given a Player object.
-     * @param player
-     */
-    public void renderCards(Player player) {
-        this.card_layout.removeAllViews();
-        // TODO make cards more easily differentiable in collapse mode (perhaps alternating shading)?
-        ArrayList<Card> cards = player.getDeck().getCards();
-
-        addCardsToLayout(cards, this.card_layout,0,collapse);
-    }
-
-    /**
-     * Renders the currently played cards on the playpile.
-     */
-    public void renderPlayPile() {
-        this.play_layout.removeAllViews();
-
-        // Initializing back of card object, incase playpile has 0 cards
-        CardStack play_pile = this.game_state.getPlayPile();
-        ImageView back_card = new ImageView(this.card_layout.getContext().getApplicationContext());
-        back_card.setImageResource(R.drawable.backofcard);
-
-        if (play_pile.isEmpty()) {
-            this.play_layout.addView(back_card);
-        } else {
-            addCardsToLayout(play_pile.getCards(),this.play_layout,100,false);
-        }
-
-    }
-
-    /**
-     * Adds the given list of cards to the layout.
-     * @param cards
-     * @param layout
-     * @param index the starting ID of the cards added to the layout
-     * @param is_collapsed whether or not the cards are displayed on top of each other or fanned
-     */
-    private void addCardsToLayout(ArrayList<Card> cards, RelativeLayout layout,
-                                  int index, boolean is_collapsed) {
-
-        // This is a dumb and lazy patch I made for a card overlay bug
-        Space filler = new Space(layout.getContext().getApplicationContext());
-        filler.setId(index);
-        layout.addView(filler);
-        for (int i = 1; i < cards.size()+1; i++) {
-            Card c = cards.get(i-1);
-            CardImage new_card = new CardImage(
-                    this.card_layout.getContext().getApplicationContext(),
-                    c,
-                    this,
-                    i+index,
-                    is_collapsed
-            );
-            layout.addView(new_card);
-        }
-    }
-
-    public void updateTurnText(int turn) {
-
-        Log.i("game","turn text: " + turn);
-
-        if (turn == 1) {
-            this.turn_text.setText("Your turn");
-        } else if (turn > 0) {
-            this.turn_text.setText("Player " + turn + "'s turn...");
-        } else if (turn == -1){
-            int real_turn = game_state.getCurrTurn().getPrevTurn();
-            this.turn_text.setText("Player " + real_turn + " wins!");
-        }
-    }
-
-    // This is for proj E testing
-    private EditText editText;
-
-    // For sending GameState info to players:
-    public void sendInfo(GameAction action, Player player) {
-        player.receiveInfo(action);
-    }
-
-    // For sending GameAction info to GameState:
-    public boolean sendInfo(GameAction action) {
-        return this.game_state.receiveInfo(action);
-    }
-
-    // For printing debug to the screen (used for ProjE)
-    public void print(String msg) {
-        Log.i("Game",msg);
-    }
-
-    public ArrayList<Player> getPlayers() {
-        return players;
-    }
-
-    public void setPlayers(ArrayList<Player> players) {
-        this.players = players;
-    }
-
-    public PresidentGameState getGameState() {
-        return game_state;
-    }
-
-    public void setGameState(PresidentGameState game_state) {
-        this.game_state = game_state;
-    }
-
-    public void setTester(HumanPlayer tester) {
-        this.tester = tester;
-    }
-
-    public void setTurnText(TextView turn_text) {
-        this.turn_text = turn_text;
-    }
-
-    public void setEditText(EditText editText) {
-        this.editText = editText;
-    }
-
-    public CharSequence getEditText() {
-        return this.editText.getText();
+    public PresidentGame(GameConfig config, GameMainActivity activity) {
+        this.config = config;
+        this.activity = activity;
+        this.NUM_PLAYERS = config.getNumPlayers();
     }
 
     @Override
-    public void onClick(View view) {
+    public void start(GamePlayer[] players) {
+        super.start(players);
 
-        // If collapse has been pressed:
-        if (view.getId() == R.id.collapse_button) {
-            Button button = (Button) view;
-            this.collapse = !collapse;
-            renderCards(game_state.getPlayerFromTurn());
+        boolean isRestart = false;
+        PresidentGameState prev_state = null;
+        if (this.golden_state != null) {
+            isRestart = this.golden_state.isGameOver();
+            prev_state = new PresidentGameState(this.golden_state);
+        }
+        this.golden_state = new PresidentGameState(config);
 
-            // Changing text to show appropriate action
-            if (this.collapse) {
-                button.setText("Expand");
-            } else {
-                button.setText("Collapse");
+        // Initializing player data objects...
+        if (isRestart) { // To avoid removing the previous score data:
+            for (int i = 0; i < NUM_PLAYERS; i++) {
+                this.golden_state.registerPlayer(config.getSelName(i), i, prev_state.getPlayerData(i).getScore());
             }
-
-            //TODO remove this line
-            renderPlayPile();
+        } else {
+            for (int i = 0; i < NUM_PLAYERS; i++) {
+                this.golden_state.registerPlayer(config.getSelName(i), i);
+            }
         }
 
-        // If play button was pressed:
-        if (view.getId() == R.id.play_button) {
+        for (int i = 0; i < NUM_PLAYERS; i++) {
+            GamePlayer p = this.players[i];
+            p.setGame(this);
+            p.setPlayerNum(i);
+        }
+        this.players[0].setAsGui(this.activity);
+        dealCards();
+        sendAllUpdatedState();
+    }
 
-            tester.playCards();
-            renderCards(tester);
+    // Assumes that the players array has been initialized
+    public void dealCards() {
+        Deck masterDeck = new Deck();
+        masterDeck.generateMasterDeck();
+
+
+        for (int i = 0; i < NUM_PLAYERS; i++) {
+
+            PlayerInfo player_data = this.golden_state.getPlayerData(i);
+            player_data.getDeck().getCards().clear();
+            for (int j = 0; j < (52 / NUM_PLAYERS); j++) {
+                //selects a random card of the 52 in masterDeck
+                Card randomCard = (masterDeck.getCards().get((int) Math.random() * masterDeck.MAX_CARDS));
+
+
+                player_data.addCard(randomCard);
+                masterDeck.getCards().remove(randomCard);
+            }
+        }
+    }
+
+    @Override
+    protected void sendUpdatedStateTo(GamePlayer p) {
+
+        // For sending only other player's scores:
+        PlayerInfo[] pruned_pi = new PlayerInfo[NUM_PLAYERS];
+        for (int i = 0; i < NUM_PLAYERS; i++) {
+            PlayerInfo orig = this.golden_state.getPlayerData(i);
+            pruned_pi[i] = new PlayerInfo(orig.getName(), orig.getId());
+            pruned_pi[i].setScore(orig.getScore());
         }
 
-        // If pass button was pressed:
-        if (view.getId() == R.id.pass_button) {
-            tester.pass();
+        //TODO make this all a copy?
+        p.sendInfo(new UpdateDeckInfo(
+                this.golden_state.getPlayerData(p.getPlayerNum()),
+                this.golden_state.getPlayerData(p.getPlayerNum()).getCollapse())
+        );
+        p.sendInfo(new UpdatePlayPileInfo(
+                this.golden_state.getPlayPile()));
+        p.sendInfo(new UpdatePeripheralInfo(
+                this.golden_state.getTurn(),
+                pruned_pi,
+                (PresidentMainActivity) this.activity
+        ));
+
+
+
+        if (isPlayerTurn(p)) {
+            p.sendInfo(new PresidentGameState(this.golden_state, p.getPlayerNum()));
         }
+    }
+
+    @Override
+    protected boolean canMove(int playerIdx) {
+        return false;
+    }
+
+    @Override
+    protected String checkIfGameOver() {
+
+        if (this.golden_state.isGameOver()) {
+            String msg = "Player " + getCurrPlayer().getName() + " wins!\n" +
+                    "Would you like to play again?";
+            MessageBox.popUpChoice(msg,
+                    "Yes",
+                    "No",
+                    this,
+                    this,
+                    this.activity);
+            return msg;
+        }
+        return null;
+    }
+
+    @Override
+    protected boolean makeMove(GameAction action) {
+        return false;
+    }
+
+    @Override
+    protected void receiveMessage(Message msg) {
+        super.receiveMessage(msg);
+
+        if (msg.obj instanceof GameAction) {
+
+            GameAction action = (GameAction) msg.obj;
+            GamePlayer player = action.getPlayer();
+
+            if (action instanceof SelectCardAction) {
+
+                if (this.golden_state.isGameOver()) {
+                    return;
+                }
+
+                SelectCardAction sca = (SelectCardAction) action;
+                CardImage card = sca.getCardImage();
+
+                if (sca.isSelection()) {
+                    if (this.golden_state.selectCard(card.getCard(), this.golden_state.getTurn())) {
+                        card.setSelected(true);
+                        Log.i("President", "Selected card action was valid");
+                    }
+                } else {
+                    if (this.golden_state.deselectCard(card.getCard(), this.golden_state.getTurn())) {
+                        card.setSelected(false);
+                        Log.i("President","De-selected card action was valid");
+                    }
+                }
+            }// select card action
+
+            if (action instanceof AISelectCardAction) {
+
+                AISelectCardAction aisca = (AISelectCardAction) action;
+
+                PlayerInfo player_info = getPlayerData(player.getPlayerNum());
+
+                player_info.getSelectedCards().set(aisca.getCardStack().getCards());
+            }// aiselectcard action
+
+            if (action instanceof PlayCardAction) {
+
+                if (this.golden_state.isGameOver()) {
+                    return;
+                }
+
+                PlayCardAction pca = (PlayCardAction) action;
+
+                PlayerInfo player_info = getPlayerData(player.getPlayerNum());
+
+                if (player_info.getSelectedCards().isEmpty()) {
+                    return;
+                }
+
+                if (isPlayerTurn(pca.getPlayer())) {
+                    CardStack play_pile = this.golden_state.getPlayPile();
+
+                    if (play_pile.getStackSize() == 0) { // If it's the very first turn...
+                        playCards(player);
+                        return;
+                    }
+
+                    // If there's a 2 on the deck (card reset):
+                    else if (play_pile.getStackRank() == 15) {
+                        playCards(player);
+                        Log.i("President","Playing 2 card!");
+                        return;
+                    }
+
+                    else {
+                        CardStack selected_cards = getPlayerData(
+                                pca.getPlayer().getPlayerNum()).getSelectedCards();
+                        // Rules for playing cards
+                        if (selected_cards.getStackRank() == 15) { // Override if it's a 2
+                            playCards(player);
+                        }
+                        if (play_pile.getStackSize() <= selected_cards.getStackSize()) {
+                            if (play_pile.getStackRank() < selected_cards.getStackRank()) {
+                                playCards(player);
+                            }
+                        }
+                    }
+                }
+            }// play card action
+
+            if (action instanceof CollapseCardAction) {
+
+                if (this.golden_state.isGameOver()) {
+                    return;
+                }
+
+                PlayerInfo player_info = getPlayerData(player.getPlayerNum());
+
+                player_info.setCollapse(!player_info.getCollapse());
+                Log.i("President","Set collpase to " + player_info.getCollapse());
+                sendUpdatedStateTo(player);
+            }// collapse card action
+
+            if (action instanceof PassAction) {
+
+                if (this.golden_state.isGameOver()) {
+                    return;
+                }
+
+                if (isPlayerTurn(action.getPlayer())) {
+                    nextTurn();
+                    this.golden_state.addPass();
+                    sendAllUpdatedState();
+
+                    // If everyone has passed (no one can play), reset the playpile.
+                    if (this.golden_state.getPasses() >= NUM_PLAYERS) {
+                        startNewRound();
+                    }
+                }
+            }// pass action
+        }
+    }
+
+    private void nextTurn() {
+        this.golden_state.nextTurn();
+        if (getCurrPlayer().supportsGui()) {
+            getCurrPlayer().setAsGui(this.activity);
+        }
+    }
+
+    public void startNewRound() {
+        // TODO info msg for player
+        this.golden_state.getPlayPile().clear();
+        sendAllUpdatedState();
+    }
+
+    public void playCards(GamePlayer player) {
+
+        Log.i("President","Play cards method called");
+
+        // Remove all of the selected cards from their deck
+        PlayerInfo player_info = getPlayerData(player.getPlayerNum());
+        this.golden_state.getPlayPile().clear();
+        this.golden_state.getPlayPile().add(player_info.getSelectedCards().getCards());
+        for (Card c : player_info.getSelectedCards().getCards()) {
+            player_info.getDeck().removeCard(
+                c
+            );
+        }
+
+        // If they have no cards left, they've won
+        if (player_info.getDeck().getCards().size() == 0) {
+            this.golden_state.setGameOver(true);
+        } else {
+            nextTurn();
+        }
+        this.golden_state.setPasses(0); // Consecutive passes has been reset since someone played a
+                                        // card
+
+        player_info.getSelectedCards().clear();
+        sendAllUpdatedState();
+    }
+
+    // TODO fix this
+    public boolean isPlayerTurn(GamePlayer player) {
+
+        if (player.getPlayerNum() == this.golden_state.getTurn()) {
+            return true;
+        }
+        return false;
+    }
+
+    public GamePlayer getCurrPlayer() {
+        return this.players[this.golden_state.getTurn()];
+    }
+
+    public PlayerInfo getPlayerData(int idx) {
+        return this.golden_state.getPlayerData(idx);
+    }
+
+    private void assignScores() {
+        // Create a list of playerinfo sorted by deck size
+        PlayerInfo[] sorted_pinfo = new PlayerInfo[NUM_PLAYERS];
+
+        // selection sort
+        for (int i = 0; i < NUM_PLAYERS; i++) {
+            int min = getPlayerData(i).getDeck().getCards().size();
+            PlayerInfo min_pinfo = getPlayerData(i);
+            for (int j = i+1; j < NUM_PLAYERS; j++) {
+                PlayerInfo compare = getPlayerData(j);
+
+                if (compare.getDeck().getCards().size() < min) {
+                    min = compare.getDeck().getCards().size();
+                    min_pinfo = compare;
+                }
+
+            }
+            sorted_pinfo[i] = min_pinfo;
+        }
+
+        sorted_pinfo[0].addScore(3);
+        sorted_pinfo[1].addScore(2);
+        sorted_pinfo[2].addScore(1);
+    }
+
+    @Override
+    public void onClick(DialogInterface dialogInterface, int i) {
+        // -2 for no, -1 for yes
+        if (i == -2) {
+            this.activity.recreate();
+        } else {
+            assignScores();
+            start(this.players);
+        }
+    }
+
+    //TODO send copy of config
+    public GameConfig getConfig() {
+        return this.config;
     }
 }

@@ -99,7 +99,11 @@ public class CardStack {
 
     // Ensures that every card is of the same rank as each other.
     private boolean validateCards(List<Card> card_list) {
+        if (isEmpty()) {
+            return true;
+        }
         boolean flag = true;
+
         // Checking if the given card list contains all the same card ranks
         for (int i = 0; i < card_list.size(); i++) {
             if (card_list.get(i).getRank() != card_list.get(0).getRank()) {
@@ -118,10 +122,20 @@ public class CardStack {
     }
 
     public boolean remove(Card card) {
+
+        if (isEmpty()) {
+            return false;
+        }
         for (int i = 0; i < this.cards.size(); i++) {
             if (this.cards.get(i).cardEquals(card)) {
                 card.setSelected(false);
                 this.cards.remove(i);
+
+                // If we've now removed all cards in the stack...
+                if (this.cards.size() == 0) {
+                    this.cards = new ArrayList<>();
+                }
+
                 return true;
             }
         }
@@ -162,7 +176,11 @@ public class CardStack {
     }
 
     public void clear() {
-        this.cards = null;
+
+        for (Card c : this.cards) {
+            c.setSelected(false);
+        }
+        this.cards = new ArrayList<Card>();
     }
 
     public boolean isEmpty() {

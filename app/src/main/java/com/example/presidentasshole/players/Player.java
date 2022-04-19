@@ -3,14 +3,13 @@ package com.example.presidentasshole.players;
 import com.example.presidentasshole.cards.Card;
 import com.example.presidentasshole.cards.CardStack;
 import com.example.presidentasshole.cards.Deck;
-import com.example.presidentasshole.PresidentGame;
+import com.example.presidentasshole.PresidentGameDeprecated;
 import com.example.presidentasshole.actions.ClearDeckAction;
 import com.example.presidentasshole.actions.DealCardAction;
 import com.example.presidentasshole.actions.GameAction;
 import com.example.presidentasshole.actions.PassAction;
 import com.example.presidentasshole.actions.PlayCardAction;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -26,7 +25,7 @@ public abstract class Player {
 
     protected Deck deck;
     protected CardStack selectedCards;
-    protected PresidentGame game;
+    protected PresidentGameDeprecated game;
 
     protected int score;
 
@@ -42,7 +41,7 @@ public abstract class Player {
         this.selectedCards = new CardStack();
     }
 
-    public Player(PresidentGame game) {
+    public Player(PresidentGameDeprecated game) {
         this.game = game;
         this.id = UUID.randomUUID();
         this.deck = new Deck();
@@ -138,7 +137,7 @@ public abstract class Player {
         this.game.print(this.deck.toString());
     }
 
-    public PresidentGame getGame() {
+    public PresidentGameDeprecated getGame() {
         return this.game;
     }
 }

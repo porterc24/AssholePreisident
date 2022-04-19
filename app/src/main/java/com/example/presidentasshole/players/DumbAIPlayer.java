@@ -4,7 +4,7 @@ import static java.lang.Thread.sleep;
 
 import android.os.Handler;
 
-import com.example.presidentasshole.PresidentGame;
+import com.example.presidentasshole.PresidentGameDeprecated;
 import com.example.presidentasshole.actions.GameAction;
 import com.example.presidentasshole.actions.PromptAction;
 import com.example.presidentasshole.cards.Card;
@@ -28,7 +28,7 @@ import java.util.Random;
  */
 public class DumbAIPlayer extends Player {
 
-    public DumbAIPlayer(PresidentGame game) {
+    public DumbAIPlayer(PresidentGameDeprecated game) {
         super(game);
     }
 

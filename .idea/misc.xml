@@ -9,6 +9,19 @@
         <entry key="..\:/Users/sirma/AndroidStudioProjects/AssholePreisident/app/src/main/res/drawable/card_attrs.xml" value="0.35833333333333334" />
         <entry key="..\:/Users/sirma/AndroidStudioProjects/AssholePreisident/app/src/main/res/drawable/card_image_template.xml" value="0.3828125" />
         <entry key="..\:/Users/sirma/AndroidStudioProjects/AssholePreisident/app/src/main/res/layout/activity_main.xml" value="0.5781990521327014" />
+        <entry key="..\:/Users/sirma/AndroidStudioProjects/AssholePreisident/app/src/main/res/layout/game_config_tabhost.xml" value="0.2848731884057971" />
+        <entry key="..\:/Users/sirma/AndroidStudioProjects/AssholePreisident/app/src/main/res/layout/game_local_tab.xml" value="0.2848731884057971" />
+        <entry key="..\:/Users/sirma/AndroidStudioProjects/AssholePreisident/app/src/main/res/layout/game_no_gui.xml" value="0.2848731884057971" />
+        <entry key="..\:/Users/sirma/AndroidStudioProjects/AssholePreisident/app/src/main/res/layout/game_player_list_row.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/sirma/AndroidStudioProjects/AssholePreisident/app/src/main/res/layout/game_remote_tab.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/sirma/AndroidStudioProjects/AssholePreisident/app/src/main/res/layout/president_asshole.xml" value="0.25" />
+        <entry key="..\:/Users/sirma/AndroidStudioProjects/AssholePreisident/app/src/main/res/layout/president_asshole_5.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/sirma/AndroidStudioProjects/AssholePreisident/app/src/main/res/layout/president_asshole_6.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/sirma/AndroidStudioProjects/AssholePreisident/app/src/main/res/layout/president_asshole_7.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/sirma/AndroidStudioProjects/AssholePreisident/app/src/main/res/layout/president_asshole_7to8.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/sirma/AndroidStudioProjects/AssholePreisident/app/src/main/res/layout/president_asshole_extended.xml" value="0.2848731884057971" />
+        <entry key="..\:/Users/sirma/AndroidStudioProjects/AssholePreisident/app/src/main/res/layout/president_asshole_remaster.xml" value="0.2848731884057971" />
+        <entry key="..\:/Users/sirma/AndroidStudioProjects/AssholePreisident/app/src/main/res/menu/game_main.xml" value="0.36666666666666664" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2418478260869565" />
       </map>
     </option>
@@ -18,5 +31,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.36666666666666664" />
+      </ProjectState>
+    </option>
   </component>
 </project>

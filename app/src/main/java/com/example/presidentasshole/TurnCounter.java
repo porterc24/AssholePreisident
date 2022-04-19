@@ -5,9 +5,7 @@ import androidx.annotation.NonNull;
 /**
  * @author Max Woods
  * This class keeps track of what turn it is. When the turn counter is greater than
- * the number of players, it resets back to 1.
- *
- * IMPORTANT: Turn counter starts at 1!!!
+ * the number of players, it resets back to 0.
  */
 public class TurnCounter {
     int turn;
@@ -15,7 +13,7 @@ public class TurnCounter {
 
     public TurnCounter(int max_players) {
         this.max_players = max_players;
-        this.turn = 1;
+        this.turn = 0;
     }
 
     // Copy ctor for TurnCounter
@@ -26,21 +24,21 @@ public class TurnCounter {
 
     public void nextTurn() {
         this.turn++;
-        if (this.turn > max_players) {
-            this.turn = 1;
+        if (this.turn > max_players-1) {
+            this.turn = 0;
         }
     }
 
     public int getPrevTurn() {
         int prev_turn = this.turn - 1;
-        if (prev_turn == 0) {
-            prev_turn = 1;
+        if (prev_turn < 0) {
+            prev_turn = 0;
         }
         return prev_turn;
     }
 
     public void reset() {
-        this.turn = 1;
+        this.turn = 0;
     }
 
     public int getTurn() {
