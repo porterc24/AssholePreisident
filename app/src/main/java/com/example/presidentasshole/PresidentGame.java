@@ -214,19 +214,23 @@ public class PresidentGame extends LocalGame implements DialogInterface.OnClickL
             if (action instanceof SelectCardAction) {
 
                 SelectCardAction sca = (SelectCardAction) action;
-                CardImage card = sca.getCardImage();
+                CardImage card_image = sca.getCardImage();
 
+                // isSelection() determines whether or not a player is selecting or de-selecting
+                // a card
                 if (sca.isSelection()) {
-                    if (this.golden_state.selectCard(card.getCard(), this.golden_state.getTurn())) {
-                        card.setSelected(true);
+                    if (this.golden_state.selectCard(card_image.getCard(), this.golden_state.getTurn())) {
+                        card_image.getCard().setSelected(true);
                         Log.i("President", "Selected card action was valid");
                     }
                 } else {
-                    if (this.golden_state.deselectCard(card.getCard(), this.golden_state.getTurn())) {
-                        card.setSelected(false);
+                    if (this.golden_state.deselectCard(card_image.getCard(), this.golden_state.getTurn())) {
+                        card_image.getCard().setSelected(false);
                         Log.i("President","De-selected card action was valid");
                     }
                 }
+
+                sendUpdatedStateTo(player);
             }// select card action
 
             if (action instanceof AISelectCardAction) {

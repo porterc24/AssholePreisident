@@ -71,18 +71,8 @@ public class CardImage extends androidx.appcompat.widget.AppCompatImageButton {
         this.setImageResource(this.card_model.toResourceID());
         this.setWillNotDraw(false);
 
-        if (this.card_model.isSelected()) {
+        if (isSelected()) {
             this.setAlpha(0.5f);
-        }
-    }
-
-    public void setSelected(boolean selected) {
-        if (selected) {
-            this.setAlpha(0.5f);
-            this.selected = true;
-        } else {
-            this.setAlpha(1.0f);
-            this.selected = false;
         }
     }
 
@@ -91,7 +81,7 @@ public class CardImage extends androidx.appcompat.widget.AppCompatImageButton {
     }
 
     public boolean isSelected() {
-        return this.selected;
+        return this.card_model.isSelected();
     }
 
     public void delete() {
