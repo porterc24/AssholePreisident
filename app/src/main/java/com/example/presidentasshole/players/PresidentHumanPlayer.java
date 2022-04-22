@@ -1,6 +1,8 @@
 package com.example.presidentasshole.players;
 
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,11 +29,13 @@ import com.example.presidentasshole.info.PlayerInfo;
 import com.example.presidentasshole.info.UpdateDeckInfo;
 import com.example.presidentasshole.info.UpdateGUIInfo;
 import com.example.presidentasshole.info.UpdatePlayPileInfo;
+import com.example.presidentasshole.util.DoubleTapGestureDetector;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
-public class PresidentHumanPlayer extends GameHumanPlayer implements View.OnClickListener {
+public class PresidentHumanPlayer extends GameHumanPlayer
+        implements View.OnClickListener, View.OnTouchListener {
 
     private int num_players;
 
@@ -40,6 +44,8 @@ public class PresidentHumanPlayer extends GameHumanPlayer implements View.OnClic
 
     private TextView[] player_text_views;
     private TextView turn_view;
+
+    private GestureDetector gesture_detector; // Used for when the player double taps a card
 
     /**
      * constructor
@@ -141,6 +147,11 @@ public class PresidentHumanPlayer extends GameHumanPlayer implements View.OnClic
         }
     }
 
+    // This method is called by the DoubleTapGestureDetector upon double tapping a card
+    public void collapse() {
+        this.game.sendAction(new CollapseCardAction(this));
+    }
+
     @Override
     public void setAsGui(GameMainActivity activity) {
 
@@ -165,6 +176,11 @@ public class PresidentHumanPlayer extends GameHumanPlayer implements View.OnClic
         this.play_layout = (RelativeLayout) activity.findViewById(R.id.PlayPileLayout);
         this.turn_view = (TextView) activity.findViewById(R.id.turn_text);
         activity.findViewById(R.id.collapse_button).setOnClickListener(this);
+
+        this.gesture_detector = new GestureDetector(
+                this.card_layout.getContext().getApplicationContext(),
+                new DoubleTapGestureDetector(this)
+        );
     }
 
     private int getResId(String resName) {
@@ -235,6 +251,9 @@ public class PresidentHumanPlayer extends GameHumanPlayer implements View.OnClic
                     is_play_pile
             );
             new_card.setOnClickListener(this);
+            if (!is_play_pile) {
+                new_card.setOnTouchListener(this);
+            }
 
             layout.addView(new_card);
         }
@@ -288,5 +307,11 @@ public class PresidentHumanPlayer extends GameHumanPlayer implements View.OnClic
             Log.i("President","Pressed collapse button");
             this.game.sendAction(new CollapseCardAction(this));
         }
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        this.gesture_detector.onTouchEvent(motionEvent);
+        return false;
     }
 }
