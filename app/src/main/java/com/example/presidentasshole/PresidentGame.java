@@ -309,6 +309,11 @@ public class PresidentGame extends LocalGame implements DialogInterface.OnClickL
             if (action instanceof PassAction) {
 
                 if (isPlayerTurn(action.getPlayer())) {
+                    // Reset the cards that they have selected:
+                    // (This shouldn't happen anyway since you can only pass if you
+                    // have no cards selected, but just in case
+                    this.golden_state.getPlayerData(action.getPlayer().getPlayerNum())
+                            .getSelectedCards().clear();
                     nextTurn();
                     this.golden_state.addPass();
                     sendAllUpdatedState();
