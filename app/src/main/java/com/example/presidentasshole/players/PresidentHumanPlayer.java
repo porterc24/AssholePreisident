@@ -164,9 +164,6 @@ public class PresidentHumanPlayer extends GameHumanPlayer implements View.OnClic
         this.card_layout = (RelativeLayout) activity.findViewById(R.id.PlayerCardScrollViewLayout);
         this.play_layout = (RelativeLayout) activity.findViewById(R.id.PlayPileLayout);
         this.turn_view = (TextView) activity.findViewById(R.id.turn_text);
-
-        activity.findViewById(R.id.play_button).setOnClickListener(this);
-        activity.findViewById(R.id.pass_button).setOnClickListener(this);
         activity.findViewById(R.id.collapse_button).setOnClickListener(this);
     }
 
@@ -287,19 +284,9 @@ public class PresidentHumanPlayer extends GameHumanPlayer implements View.OnClic
             }
         }
 
-        if (view.getId() == R.id.play_button) {
-            Log.i("President","Pressed play button");
-            this.game.sendAction(new PlayCardAction(this));
-        }
-
         if (view.getId() == R.id.collapse_button) {
             Log.i("President","Pressed collapse button");
             this.game.sendAction(new CollapseCardAction(this));
-        }
-
-        if (view.getId() == R.id.pass_button) {
-            Log.i("President","Pressed pass button");
-            this.game.sendAction(new PassAction(this));
         }
     }
 }
