@@ -89,42 +89,12 @@ public class PresidentHumanPlayer extends GameHumanPlayer
             } else {
                 this.turn_view.setText("Player " + (turn+1) + "'s turn");
             }
+            // TODO the way this is setup could have some real big issues for multiplayer
             this.player_text_views = new TextView[num_players];
             this.player_text_views[0] = activity.findViewById(R.id.player1_points_text);
-
-            if (num_players > 4) {
-
-                switch (num_players) {
-                    case 5:
-                        activity.setContentView(R.layout.president_asshole_5);
-                        break;
-                    case 6:
-                        activity.setContentView(R.layout.president_asshole_6);
-                        break;
-                    case 7:
-                        activity.setContentView(R.layout.president_asshole_7);
-                        break;
-                    case 8:
-                        activity.setContentView(R.layout.president_asshole_8);
-                        break;
-                    default:
-                        activity.setContentView(R.layout.president_asshole);
-                }
-
-                this.player_text_views[1] = activity.findViewById(R.id.player2_points_layout);
-                this.player_text_views[2] = activity.findViewById(R.id.player3_points_layout);
-                this.player_text_views[3] = activity.findViewById(R.id.player4_points_layout);
-
-                for (int i = 3; i < num_players; i++) {
-                    this.player_text_views[i] = activity.findViewById(getResId("player" + (i+2) + "_points_layout"));
-                }
-
-
-            } else {
-                this.player_text_views[1] = activity.findViewById(R.id.player2_points_text);
-                this.player_text_views[2] = activity.findViewById(R.id.player3_points_4p);
-                this.player_text_views[3] = activity.findViewById(R.id.player3_points_text);
-            }
+            this.player_text_views[1] = activity.findViewById(R.id.player2_points_text);
+            this.player_text_views[2] = activity.findViewById(R.id.player3_points_4p);
+            this.player_text_views[3] = activity.findViewById(R.id.player3_points_text);
 
             //TEST
             for (int i = 0; i < num_players; i++) {
@@ -136,6 +106,30 @@ public class PresidentHumanPlayer extends GameHumanPlayer
                     this.player_text_views[i].setText(msg);
                 }
             }
+
+            // TODO fix boiler plate garbage
+            // Play card display
+            LinearLayout player2_layout = (LinearLayout) activity.findViewById(R.id.player2_layout_p4);
+            player2_layout.removeView(player2_layout.getChildAt(1));
+            player2_layout.addView(
+                    new PlayerHandImage(activity.getApplicationContext(),
+                            p_info.getPlayerScores()[1].getGUIDeckSize())
+            );
+
+            LinearLayout player3_layout = (LinearLayout) activity.findViewById(R.id.player3_layout_p4);
+            player3_layout.removeAllViews();
+            player3_layout.addView(
+                    new PlayerHandImage(activity.getApplicationContext(),
+                            p_info.getPlayerScores()[2].getGUIDeckSize())
+            );
+
+            LinearLayout player4_layout = (LinearLayout) activity.findViewById(R.id.player4_layout_p4);
+            player4_layout.removeAllViews();
+            player4_layout.removeView(player4_layout.getChildAt(1));
+            player4_layout.addView(
+                    new PlayerHandImage(activity.getApplicationContext(),
+                            p_info.getPlayerScores()[3].getGUIDeckSize())
+            );
 
         }// peripheral game info
 
@@ -157,20 +151,6 @@ public class PresidentHumanPlayer extends GameHumanPlayer
 
         activity.setTheme(R.style.Theme_MyApplication);
         activity.setContentView(R.layout.president_asshole);
-
-        for (int i = 0; i < 2; i++) {
-            ((LinearLayout) activity.findViewById(R.id.player2_layout_p4)).addView(
-                    new PlayerHandImage(activity.getApplicationContext())
-            );
-
-            ((LinearLayout) activity.findViewById(R.id.player3_layout_p4)).addView(
-                    new PlayerHandImage(activity.getApplicationContext())
-            );
-
-            ((LinearLayout) activity.findViewById(R.id.player4_layout_p4)).addView(
-                    new PlayerHandImage(activity.getApplicationContext())
-            );
-        }
 
         this.card_layout = (RelativeLayout) activity.findViewById(R.id.PlayerCardScrollViewLayout);
         this.play_layout = (RelativeLayout) activity.findViewById(R.id.PlayPileLayout);

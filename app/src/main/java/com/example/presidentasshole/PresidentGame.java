@@ -151,6 +151,7 @@ public class PresidentGame extends LocalGame implements DialogInterface.OnClickL
             PlayerInfo orig = this.golden_state.getPlayerData(i);
             pruned_pi[i] = new PlayerInfo(orig.getName(), orig.getId());
             pruned_pi[i].setScore(orig.getScore());
+            pruned_pi[i].setGUIDeckSize(orig.getDeck().getCards().size());
         }
 
         //TODO make this all a copy?
@@ -351,6 +352,7 @@ public class PresidentGame extends LocalGame implements DialogInterface.OnClickL
         // If they have no cards left, they've won
         if (player_info.getDeck().getCards().size() == 0) {
             this.golden_state.setGameOver(true);
+            checkIfGameOver();
         } else {
             nextTurn();
         }

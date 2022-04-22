@@ -16,6 +16,7 @@ public class PlayerInfo {
 
     private int id;
     private int score;
+    private int gui_deck_size; // This is only used when sending UpdateGUIInfo to players
 
     private boolean collapse;
 
@@ -79,6 +80,14 @@ public class PlayerInfo {
 
     public int getScore() {
         return score;
+    }
+
+    public void setGUIDeckSize(int deck_size) {
+        this.gui_deck_size = deck_size;
+    }
+
+    public int getGUIDeckSize() {
+        return gui_deck_size;
     }
 
     public void setScore(int score) {
