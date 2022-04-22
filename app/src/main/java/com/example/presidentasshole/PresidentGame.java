@@ -21,7 +21,7 @@ import com.example.presidentasshole.game.config.GameConfig;
 import com.example.presidentasshole.game.util.MessageBox;
 import com.example.presidentasshole.info.PlayerInfo;
 import com.example.presidentasshole.info.UpdateDeckInfo;
-import com.example.presidentasshole.info.UpdatePeripheralInfo;
+import com.example.presidentasshole.info.UpdateGUIInfo;
 import com.example.presidentasshole.info.UpdatePlayPileInfo;
 
 /**
@@ -97,6 +97,20 @@ public class PresidentGame extends LocalGame implements DialogInterface.OnClickL
     }
 
     /**
+     * Called by a GamePlayer object when they'd like their PlayerInfo. Sends a copy of their
+     * PlayerInfo data.
+     * @param player
+     */
+    public PlayerInfo requestInfo(GamePlayer player) {
+
+        // To ensure invalid players don't get this information:
+        if (isPlayerTurn(player)) {
+            return this.golden_state.getPlayerData(player.getPlayerNum());
+        }
+        return null;
+    }
+
+    /**
      * This method creates all of the cards that players will have in their hands. These cards
      * are then added to every player's PlayerInfo object.
      *
@@ -146,7 +160,7 @@ public class PresidentGame extends LocalGame implements DialogInterface.OnClickL
         );
         p.sendInfo(new UpdatePlayPileInfo(
                 this.golden_state.getPlayPile()));
-        p.sendInfo(new UpdatePeripheralInfo(
+        p.sendInfo(new UpdateGUIInfo(
                 this.golden_state.getTurn(),
                 pruned_pi,
                 (PresidentMainActivity) this.activity

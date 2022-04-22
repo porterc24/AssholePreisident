@@ -23,9 +23,13 @@ import com.example.presidentasshole.players.PresidentHumanPlayer;
 public class CardImage extends androidx.appcompat.widget.AppCompatImageButton {
 
     private Card card_model;
-    private boolean selected;
+    private boolean is_play_pile;
 
-    public CardImage(@NonNull Context context, Card card_model, int id, boolean collapse) {
+    public CardImage(@NonNull Context context,
+                     Card card_model,
+                     int id,
+                     boolean collapse,
+                     boolean is_play_pile) {
         super(context);
         /**
          * External Citation
@@ -45,9 +49,8 @@ public class CardImage extends androidx.appcompat.widget.AppCompatImageButton {
         );
         // TODO might wanna replace this with display pixels
         this.card_model = card_model;
+        this.is_play_pile = is_play_pile;
         this.setId(id);
-        this.selected = false;
-
         int margins = 5;
 
         // This && check is to prevent the card from going out of bounds
@@ -68,8 +71,14 @@ public class CardImage extends androidx.appcompat.widget.AppCompatImageButton {
 
         this.setAdjustViewBounds(true);
         this.setLayoutParams(params);
-        this.setImageResource(this.card_model.toResourceID());
         this.setWillNotDraw(false);
+
+        // -99 means this is a back-facing card
+        if (this.card_model.getRank() == -99) {
+            this.setImageResource(R.drawable.backofcard);
+        } else {
+            this.setImageResource(this.card_model.toResourceID());
+        }
 
         if (isSelected()) {
             this.setAlpha(0.5f);
@@ -82,6 +91,10 @@ public class CardImage extends androidx.appcompat.widget.AppCompatImageButton {
 
     public boolean isSelected() {
         return this.card_model.isSelected();
+    }
+
+    public boolean isPlayPile() {
+        return this.is_play_pile;
     }
 
     public void delete() {
