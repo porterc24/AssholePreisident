@@ -5,6 +5,9 @@ import com.example.presidentasshole.game.GamePlayer;
 import com.example.presidentasshole.game.LocalGame;
 import com.example.presidentasshole.game.config.GameConfig;
 import com.example.presidentasshole.game.config.GamePlayerType;
+import com.example.presidentasshole.players.PresidentDumbComputerPlayer;
+import com.example.presidentasshole.players.PresidentHumanPlayer;
+import com.example.presidentasshole.players.PresidentSmartComputerPlayer;
 
 import java.util.ArrayList;
 

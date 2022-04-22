@@ -1,6 +1,4 @@
-package com.example.presidentasshole;
-
-import androidx.annotation.NonNull;
+package com.example.presidentasshole.util;
 
 /**
  * @author Max Woods
@@ -8,8 +6,8 @@ import androidx.annotation.NonNull;
  * the number of players, it resets back to 0.
  */
 public class TurnCounter {
-    int turn;
-    int max_players;
+    private int turn;
+    private int max_players;
 
     public TurnCounter(int max_players) {
         this.max_players = max_players;

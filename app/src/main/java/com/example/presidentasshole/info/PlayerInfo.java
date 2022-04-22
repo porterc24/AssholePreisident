@@ -1,9 +1,13 @@
-package com.example.presidentasshole;
+package com.example.presidentasshole.info;
 
 import com.example.presidentasshole.cards.Card;
 import com.example.presidentasshole.cards.CardStack;
 import com.example.presidentasshole.cards.Deck;
 
+/**
+ * Encapsulates information about players. Stored in the player_info[] array in
+ * PresidentGameState.
+ */
 public class PlayerInfo {
 
     private String name;

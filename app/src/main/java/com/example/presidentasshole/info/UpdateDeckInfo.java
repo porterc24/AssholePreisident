@@ -1,8 +1,6 @@
-package com.example.presidentasshole;
+package com.example.presidentasshole.info;
 
 import com.example.presidentasshole.cards.Card;
-import com.example.presidentasshole.cards.CardStack;
-import com.example.presidentasshole.cards.Deck;
 import com.example.presidentasshole.game.infoMsg.GameInfo;
 
 import java.util.ArrayList;

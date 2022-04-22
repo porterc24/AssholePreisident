@@ -2,19 +2,23 @@ package com.example.presidentasshole.cards;
 
 import android.content.Context;
 import android.util.Log;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 
-import com.example.presidentasshole.PresidentGameDeprecated;
 import com.example.presidentasshole.R;
+import com.example.presidentasshole.players.PresidentHumanPlayer;
 
 /**
  * @author Max Woods
  *
- * Visual representation of a card object on the screen.
+ * Visual representation of a card object on the screen. This is used in the player's hand, as
+ * well as the PlayPile. It functions as an image button. The HumanPlayer functions as its
+ * onClickListener
+ *
+ * @see
+ *  PresidentHumanPlayer
  */
 public class CardImage extends androidx.appcompat.widget.AppCompatImageButton {
 

@@ -3,8 +3,12 @@ package com.example.presidentasshole;
 import android.content.DialogInterface;
 import android.os.Message;
 import android.util.Log;
-import android.view.View;
 
+import com.example.presidentasshole.actions.AISelectCardAction;
+import com.example.presidentasshole.actions.CollapseCardAction;
+import com.example.presidentasshole.actions.PassAction;
+import com.example.presidentasshole.actions.PlayCardAction;
+import com.example.presidentasshole.actions.SelectCardAction;
 import com.example.presidentasshole.cards.Card;
 import com.example.presidentasshole.cards.CardImage;
 import com.example.presidentasshole.cards.CardStack;
@@ -15,7 +19,25 @@ import com.example.presidentasshole.game.LocalGame;
 import com.example.presidentasshole.game.actionMsg.GameAction;
 import com.example.presidentasshole.game.config.GameConfig;
 import com.example.presidentasshole.game.util.MessageBox;
+import com.example.presidentasshole.info.PlayerInfo;
+import com.example.presidentasshole.info.UpdateDeckInfo;
+import com.example.presidentasshole.info.UpdatePeripheralInfo;
+import com.example.presidentasshole.info.UpdatePlayPileInfo;
 
+/**
+ * This class handles all of the game logic for President (Asshole).
+ *
+ * Information about the game is stored in the golden_state field. The golden_state is a
+ * PresidentGameState object which contains the following important information:
+ *  - Each GamePlayer has a corresponding PlayerInfo object which contains information about
+ *    their score, cards, etc. An array of PlayerInfo corresponding to every player's ID num
+ *    is kept inside of the golden_state.
+ *
+ *  Players are sent information about the state of the game through the sendInfo() and
+ *  sendUpdatedStateTo() methods. Players are sent GameInfo objects containing information about
+ *  the game that they need in order to make decisions. See the receiveInfo() method inside of the
+ *  GamePlayer (and relevant subclasses) for more information.
+ */
 public class PresidentGame extends LocalGame implements DialogInterface.OnClickListener {
 
     private final int NUM_PLAYERS;
@@ -30,10 +52,21 @@ public class PresidentGame extends LocalGame implements DialogInterface.OnClickL
         this.NUM_PLAYERS = config.getNumPlayers();
     }
 
+    /**
+     * This method is overridden from the original because of some extra things that need to be
+     * setup (in addition to what the parent class method does).
+     *
+     * It initializes the golden game state, registers new player information, and initializes
+     * all of the player objects with their necessary information (such as their Game object ref,
+     * and their number)
+     * @param players the players in the game
+     */
     @Override
     public void start(GamePlayer[] players) {
         super.start(players);
 
+
+        // If the game is restarted, previous player score information needs to be remembered
         boolean isRestart = false;
         PresidentGameState prev_state = null;
         if (this.golden_state != null) {
@@ -63,7 +96,13 @@ public class PresidentGame extends LocalGame implements DialogInterface.OnClickL
         sendAllUpdatedState();
     }
 
-    // Assumes that the players array has been initialized
+    /**
+     * This method creates all of the cards that players will have in their hands. These cards
+     * are then added to every player's PlayerInfo object.
+     *
+     * However, this method does NOT send GameInfo objects. It only adds information to PlayerInfo
+     * objects.
+     */
     public void dealCards() {
         Deck masterDeck = new Deck();
         masterDeck.generateMasterDeck();
@@ -84,6 +123,11 @@ public class PresidentGame extends LocalGame implements DialogInterface.OnClickL
         }
     }
 
+    /**
+     * Sends every player relevant information from their corresponding PlayerInfo class inside of
+     * the golden_state.
+     * @param p
+     */
     @Override
     protected void sendUpdatedStateTo(GamePlayer p) {
 
@@ -120,8 +164,13 @@ public class PresidentGame extends LocalGame implements DialogInterface.OnClickL
         return false;
     }
 
+    /**
+     * This method is called whenever a game over condition might've been met (see playCards())
+     * It also asks the current user if they'd like to play again.
+     * @return
+     */
     @Override
-    protected String checkIfGameOver() {
+    public String checkIfGameOver() {
 
         if (this.golden_state.isGameOver()) {
             String msg = "Player " + getCurrPlayer().getName() + " wins!\n" +
@@ -142,9 +191,20 @@ public class PresidentGame extends LocalGame implements DialogInterface.OnClickL
         return false;
     }
 
+    /**
+     * This method is called by the sendAction() method by GamePlayers. Whenever a player makes
+     * a move, such as passing, selecting, or collapsing their cards, the information is sent to
+     * this method. This method then checks if it's a valid move, and sends/updates information
+     * accordingly.
+     * @param msg
+     */
     @Override
     protected void receiveMessage(Message msg) {
         super.receiveMessage(msg);
+
+        if (this.golden_state.isGameOver()) {
+            return;
+        }
 
         if (msg.obj instanceof GameAction) {
 
@@ -152,10 +212,6 @@ public class PresidentGame extends LocalGame implements DialogInterface.OnClickL
             GamePlayer player = action.getPlayer();
 
             if (action instanceof SelectCardAction) {
-
-                if (this.golden_state.isGameOver()) {
-                    return;
-                }
 
                 SelectCardAction sca = (SelectCardAction) action;
                 CardImage card = sca.getCardImage();
@@ -183,10 +239,6 @@ public class PresidentGame extends LocalGame implements DialogInterface.OnClickL
             }// aiselectcard action
 
             if (action instanceof PlayCardAction) {
-
-                if (this.golden_state.isGameOver()) {
-                    return;
-                }
 
                 PlayCardAction pca = (PlayCardAction) action;
 
@@ -229,10 +281,6 @@ public class PresidentGame extends LocalGame implements DialogInterface.OnClickL
 
             if (action instanceof CollapseCardAction) {
 
-                if (this.golden_state.isGameOver()) {
-                    return;
-                }
-
                 PlayerInfo player_info = getPlayerData(player.getPlayerNum());
 
                 player_info.setCollapse(!player_info.getCollapse());
@@ -242,17 +290,13 @@ public class PresidentGame extends LocalGame implements DialogInterface.OnClickL
 
             if (action instanceof PassAction) {
 
-                if (this.golden_state.isGameOver()) {
-                    return;
-                }
-
                 if (isPlayerTurn(action.getPlayer())) {
                     nextTurn();
                     this.golden_state.addPass();
                     sendAllUpdatedState();
 
                     // If everyone has passed (no one can play), reset the playpile.
-                    if (this.golden_state.getPasses() >= NUM_PLAYERS) {
+                    if (this.golden_state.getPasses() >= NUM_PLAYERS-1) {
                         startNewRound();
                     }
                 }
@@ -260,19 +304,13 @@ public class PresidentGame extends LocalGame implements DialogInterface.OnClickL
         }
     }
 
-    private void nextTurn() {
-        this.golden_state.nextTurn();
-        if (getCurrPlayer().supportsGui()) {
-            getCurrPlayer().setAsGui(this.activity);
-        }
-    }
-
-    public void startNewRound() {
-        // TODO info msg for player
-        this.golden_state.getPlayPile().clear();
-        sendAllUpdatedState();
-    }
-
+    /**
+     * Adds the player's cards to the PlayPile, updates their deck, and sends out a new updated
+     * game state.
+     *
+     * Also checks if a player's hand is empty. If it is, then the game is over.
+     * @param player
+     */
     public void playCards(GamePlayer player) {
 
         Log.i("President","Play cards method called");
@@ -300,7 +338,11 @@ public class PresidentGame extends LocalGame implements DialogInterface.OnClickL
         sendAllUpdatedState();
     }
 
-    // TODO fix this
+    /**
+     * Determines whether or not it's a player's turn
+     * @param player the player being checked
+     * @return TRUE if player's turn; FALSE otherwise
+     */
     public boolean isPlayerTurn(GamePlayer player) {
 
         if (player.getPlayerNum() == this.golden_state.getTurn()) {
@@ -317,6 +359,15 @@ public class PresidentGame extends LocalGame implements DialogInterface.OnClickL
         return this.golden_state.getPlayerData(idx);
     }
 
+    /**
+     * This method is called at the end of a game. It assigns the scores to players based on
+     * a some rules:
+     *
+     * 1: The player with 0 cards gets 3 points.
+     * 2: The player with the next lowest amount gets 2 points.
+     * 3: The player with the 3rd lowest amount gets 1 point.
+     * 4: Everybody else gets 0 points.
+     */
     private void assignScores() {
         // Create a list of playerinfo sorted by deck size
         PlayerInfo[] sorted_pinfo = new PlayerInfo[NUM_PLAYERS];
@@ -337,11 +388,29 @@ public class PresidentGame extends LocalGame implements DialogInterface.OnClickL
             sorted_pinfo[i] = min_pinfo;
         }
 
+        // Now that the list is sorted based on card size, add points accordingly
         sorted_pinfo[0].addScore(3);
         sorted_pinfo[1].addScore(2);
         sorted_pinfo[2].addScore(1);
     }
 
+    private void nextTurn() {
+        this.golden_state.nextTurn();
+        if (getCurrPlayer().supportsGui()) {
+            getCurrPlayer().setAsGui(this.activity);
+        }
+    }
+
+    public void startNewRound() {
+        // TODO info msg for player
+        this.golden_state.getPlayPile().clear();
+        sendAllUpdatedState();
+    }
+
+    /**
+     * This method is called when the game is over and the player selects a choice from the
+     * message box.
+     */
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
         // -2 for no, -1 for yes
@@ -351,10 +420,5 @@ public class PresidentGame extends LocalGame implements DialogInterface.OnClickL
             assignScores();
             start(this.players);
         }
-    }
-
-    //TODO send copy of config
-    public GameConfig getConfig() {
-        return this.config;
     }
 }

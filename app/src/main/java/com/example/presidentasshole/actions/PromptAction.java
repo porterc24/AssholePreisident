@@ -1,10 +1,7 @@
 package com.example.presidentasshole.actions;
 
-import com.example.presidentasshole.players.Player;
+import com.example.presidentasshole.game.infoMsg.GameInfo;
 
-public class PromptAction extends GameAction {
-
-    public PromptAction(Player sender) {
-        super(sender);
-    }
+//TODO
+public class PromptAction extends GameInfo {
 }

@@ -1,4 +1,4 @@
-package com.example.presidentasshole;
+package com.example.presidentasshole.cards;
 
 import android.content.Context;
 import android.view.Gravity;
@@ -7,6 +7,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import androidx.appcompat.widget.AppCompatImageView;
+
+import com.example.presidentasshole.R;
 
 public class PlayerHandImage extends AppCompatImageView {
 

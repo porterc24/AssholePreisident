@@ -1,6 +1,5 @@
-package com.example.presidentasshole;
+package com.example.presidentasshole.players;
 
-import android.content.res.Resources;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -9,12 +8,24 @@ import android.widget.RelativeLayout;
 import android.widget.Space;
 import android.widget.TextView;
 
+import com.example.presidentasshole.cards.PlayerHandImage;
+import com.example.presidentasshole.PresidentGame;
+import com.example.presidentasshole.PresidentGameState;
+import com.example.presidentasshole.PresidentMainActivity;
+import com.example.presidentasshole.R;
+import com.example.presidentasshole.actions.CollapseCardAction;
+import com.example.presidentasshole.actions.PassAction;
+import com.example.presidentasshole.actions.PlayCardAction;
+import com.example.presidentasshole.actions.SelectCardAction;
 import com.example.presidentasshole.cards.Card;
 import com.example.presidentasshole.cards.CardImage;
 import com.example.presidentasshole.cards.CardStack;
 import com.example.presidentasshole.game.GameHumanPlayer;
 import com.example.presidentasshole.game.GameMainActivity;
 import com.example.presidentasshole.game.infoMsg.GameInfo;
+import com.example.presidentasshole.info.UpdateDeckInfo;
+import com.example.presidentasshole.info.UpdatePeripheralInfo;
+import com.example.presidentasshole.info.UpdatePlayPileInfo;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -129,30 +140,6 @@ public class PresidentHumanPlayer extends GameHumanPlayer implements View.OnClic
         }
     }
 
-    /*
-
-
-     * Outputs the integer resource ID of the PNG file associated with this card.
-     *
-     * Card should always be valid!! (1 <= suite <= 4, 3 <= value <= 15)
-     * Otherwise terrible things might happen...
-     * @return res ID
-
-    public int toResourceID() {
-        return getResId("c_" + this.toString());
-    }
-
-    private int getResId(String resName) {
-
-        try {
-            Field idField = R.drawable.class.getField(resName);
-            return idField.getInt(idField);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return -1;
-        }
-    }
-     */
     @Override
     public void setAsGui(GameMainActivity activity) {
 

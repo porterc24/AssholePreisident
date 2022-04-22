@@ -1,17 +1,16 @@
 package com.example.presidentasshole.actions;
 
-import com.example.presidentasshole.players.Player;
+import com.example.presidentasshole.game.GamePlayer;
+import com.example.presidentasshole.game.actionMsg.GameAction;
 
-/**
- * @author Max Woods
- *
- * This should be used whenever a player passes. Used in the pass() method of the Player class.
- */
 public class PassAction extends GameAction {
 
-    public PassAction(Player sender) {
-        super(sender);
-        sender.getGame().print("Player " + sender.getId() + " attempted to pass");
+    /**
+     * constructor for GameAction
+     *
+     * @param player the player who created the action
+     */
+    public PassAction(GamePlayer player) {
+        super(player);
     }
-
 }
