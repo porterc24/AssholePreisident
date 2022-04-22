@@ -124,7 +124,6 @@ public class PresidentHumanPlayer extends GameHumanPlayer
             );
 
             LinearLayout player4_layout = (LinearLayout) activity.findViewById(R.id.player4_layout_p4);
-            player4_layout.removeAllViews();
             player4_layout.removeView(player4_layout.getChildAt(1));
             player4_layout.addView(
                     new PlayerHandImage(activity.getApplicationContext(),
