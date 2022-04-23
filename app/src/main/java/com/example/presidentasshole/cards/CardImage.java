@@ -56,7 +56,7 @@ public class CardImage extends androidx.appcompat.widget.AppCompatImageButton {
         // This && check is to prevent the card from going out of bounds
         // TODO fix this
         if (collapse && id > 1) {
-            margins = -90;
+            margins = -130;
         }
 
         // TODO Fix bug where the first two cards are on top of each other
