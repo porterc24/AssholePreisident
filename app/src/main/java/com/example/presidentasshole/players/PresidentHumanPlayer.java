@@ -1,12 +1,21 @@
 package com.example.presidentasshole.players;
 
+import android.animation.ObjectAnimator;
+import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Path;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.PathInterpolator;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Space;
 import android.widget.TextView;
 
@@ -22,6 +31,7 @@ import com.example.presidentasshole.actions.SelectCardAction;
 import com.example.presidentasshole.cards.Card;
 import com.example.presidentasshole.cards.CardImage;
 import com.example.presidentasshole.cards.CardStack;
+import com.example.presidentasshole.cards.ScrollIndicatorImage;
 import com.example.presidentasshole.game.GameHumanPlayer;
 import com.example.presidentasshole.game.GameMainActivity;
 import com.example.presidentasshole.game.infoMsg.GameInfo;
@@ -34,13 +44,25 @@ import com.example.presidentasshole.util.DoubleTapGestureDetector;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
+/**
+ * This class operates the GUI elements that are viewed by a HumanPlayer. It doesn't contain
+ * any information about the player itself; that is stored in the PlayerDate field of the
+ * PresidentGameState class.
+ *
+ * The receiveInfo() method handles information sent by the Game to the Player. Information
+ * is sent to the Game via the game.sendInfo() method.
+ */
 public class PresidentHumanPlayer extends GameHumanPlayer
-        implements View.OnClickListener, View.OnTouchListener {
+        implements View.OnClickListener, View.OnTouchListener, View.OnScrollChangeListener {
 
     private int num_players;
+    private boolean collapse; // Whether or not the cards should render collapsed or not
 
     private RelativeLayout card_layout;
     private RelativeLayout play_layout;
+
+    private LinearLayout left_scroll_indicator_layout;
+    private LinearLayout right_scroll_indicator_layout;
 
     private TextView[] player_text_views;
     private TextView turn_view;
@@ -57,8 +79,47 @@ public class PresidentHumanPlayer extends GameHumanPlayer
     }
 
     @Override
-    public View getTopView() {
-        return null;
+    public void setAsGui(GameMainActivity activity) {
+
+        activity.setTheme(R.style.Theme_MyApplication);
+        activity.setContentView(R.layout.president_asshole);
+        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        this.card_layout = (RelativeLayout) activity.findViewById(R.id.PlayerCardScrollViewLayout);
+        this.play_layout = (RelativeLayout) activity.findViewById(R.id.PlayPileLayout);
+
+        this.left_scroll_indicator_layout = (LinearLayout) activity.findViewById(
+                R.id.scroll_left_indicator);
+        this.right_scroll_indicator_layout = (LinearLayout) activity.findViewById(
+                R.id.scroll_right_indicator);
+
+        this.left_scroll_indicator_layout.removeAllViews();
+        this.right_scroll_indicator_layout.removeAllViews();
+
+        ScrollIndicatorImage left_indicator = new ScrollIndicatorImage(
+                this.card_layout.getContext().getApplicationContext(),
+                1
+        );
+        left_indicator.setOnClickListener(this);
+        this.left_scroll_indicator_layout.addView(left_indicator);
+
+        ScrollIndicatorImage right_indicator = new ScrollIndicatorImage(
+                this.card_layout.getContext().getApplicationContext(),
+                0
+        );
+        right_indicator.setOnClickListener(this);
+        this.right_scroll_indicator_layout.addView(right_indicator);
+
+        this.turn_view = (TextView) activity.findViewById(R.id.turn_text);
+
+        this.gesture_detector = new GestureDetector(
+                this.card_layout.getContext().getApplicationContext(),
+                new DoubleTapGestureDetector(this)
+        );
+
+        activity.findViewById(R.id.PlayerCardScrollView).setOnScrollChangeListener(this);
+        onScrollChange(((HorizontalScrollView)this.card_layout.getParent()),0,0,1,0);
+
     }
 
     @Override
@@ -67,6 +128,10 @@ public class PresidentHumanPlayer extends GameHumanPlayer
         if (info instanceof UpdateDeckInfo) {
             ArrayList<Card> cards = ((UpdateDeckInfo) info).getCards();
             renderCards(cards, ((UpdateDeckInfo) info).getCollapse());
+
+            this.collapse = ((UpdateDeckInfo) info).getCollapse();
+            onScrollChange((HorizontalScrollView) this.card_layout.getParent(),0,0,0,0);
+
             for (Card c : cards) {
                 Log.i("Test",c.toString());
             }
@@ -145,23 +210,6 @@ public class PresidentHumanPlayer extends GameHumanPlayer
         this.game.sendAction(new CollapseCardAction(this));
     }
 
-    @Override
-    public void setAsGui(GameMainActivity activity) {
-
-        activity.setTheme(R.style.Theme_MyApplication);
-        activity.setContentView(R.layout.president_asshole);
-
-        this.card_layout = (RelativeLayout) activity.findViewById(R.id.PlayerCardScrollViewLayout);
-        this.play_layout = (RelativeLayout) activity.findViewById(R.id.PlayPileLayout);
-        this.turn_view = (TextView) activity.findViewById(R.id.turn_text);
-        activity.findViewById(R.id.collapse_button).setOnClickListener(this);
-
-        this.gesture_detector = new GestureDetector(
-                this.card_layout.getContext().getApplicationContext(),
-                new DoubleTapGestureDetector(this)
-        );
-    }
-
     private int getResId(String resName) {
 
         try {
@@ -238,12 +286,33 @@ public class PresidentHumanPlayer extends GameHumanPlayer
         }
     }
 
+
+    @Override
+    public View getTopView() {
+        return null;
+    }
+    
+    public HorizontalScrollView getScrollView() {
+        return ((HorizontalScrollView) this.card_layout.getParent());
+    }
+
     /**
      * Called whenever a CardImage is selected.
      * @param view
      */
     @Override
     public void onClick(View view) {
+        
+        if (view instanceof ScrollIndicatorImage) {
+            ScrollIndicatorImage sii = (ScrollIndicatorImage) view;
+
+            // Shift the scrollbar if the buttons are clicked
+            if (sii.getDirection() == 1) {
+                getScrollView().setScrollX(getScrollView().getScrollX()-100);
+            } else {
+                getScrollView().setScrollX(getScrollView().getScrollX()+100);
+            }
+        }
 
         if (view instanceof CardImage) {
             CardImage ci = (CardImage) view;
@@ -281,16 +350,34 @@ public class PresidentHumanPlayer extends GameHumanPlayer
                 }
             }
         }
-
-        if (view.getId() == R.id.collapse_button) {
-            Log.i("President","Pressed collapse button");
-            this.game.sendAction(new CollapseCardAction(this));
-        }
     }
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         this.gesture_detector.onTouchEvent(motionEvent);
         return false;
+    }
+
+    @Override
+    public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+
+        if (collapse) {
+            this.right_scroll_indicator_layout.getChildAt(0).setAlpha(0f);
+            this.left_scroll_indicator_layout.getChildAt(0).setAlpha(0f);
+            return;
+        }
+
+        if (i <= 30) {
+            this.right_scroll_indicator_layout.getChildAt(0).setAlpha(1.0f);
+            this.left_scroll_indicator_layout.getChildAt(0).setAlpha(0f);
+        }
+        else if (i >= getScrollView().getRight()-30) {
+            this.right_scroll_indicator_layout.getChildAt(0).setAlpha(0f);
+            this.left_scroll_indicator_layout.getChildAt(0).setAlpha(1.0f);
+        }
+        else if (i > 30 && i < getScrollView().getRight()-30) {
+            this.right_scroll_indicator_layout.getChildAt(0).setAlpha(1.0f);
+            this.left_scroll_indicator_layout.getChildAt(0).setAlpha(1.0f);
+        }
     }
 }

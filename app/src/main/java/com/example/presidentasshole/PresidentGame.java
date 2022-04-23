@@ -396,27 +396,45 @@ public class PresidentGame extends LocalGame implements DialogInterface.OnClickL
     private void assignScores() {
         // Create a list of playerinfo sorted by deck size
         PlayerInfo[] sorted_pinfo = new PlayerInfo[NUM_PLAYERS];
+        for (int i = 0; i < NUM_PLAYERS; i++) {
+            sorted_pinfo[i] = getPlayerData(i);
+        }
+        Log.i("compare","UNSORTED LIST:");
+        for (PlayerInfo playerInfo : sorted_pinfo) {
+            Log.i("compare",playerInfo.toString());
+        }
 
         // selection sort
         for (int i = 0; i < NUM_PLAYERS; i++) {
-            int min = getPlayerData(i).getDeck().getCards().size();
-            PlayerInfo min_pinfo = getPlayerData(i);
+            int min = sorted_pinfo[i].getDeck().getCards().size();
+            int min_index = i;
+
             for (int j = i+1; j < NUM_PLAYERS; j++) {
-                PlayerInfo compare = getPlayerData(j);
+                int compare = sorted_pinfo[j].getDeck().getCards().size();
 
-                if (compare.getDeck().getCards().size() < min) {
-                    min = compare.getDeck().getCards().size();
-                    min_pinfo = compare;
+                // Finding min value in unsorted portion:
+                if (compare < min) {
+                    min = compare;
+                    min_index = j;
                 }
-
             }
-            sorted_pinfo[i] = min_pinfo;
+
+            if (min_index != i) {
+                PlayerInfo temp = sorted_pinfo[i];
+                sorted_pinfo[i] = sorted_pinfo[min_index];
+                sorted_pinfo[min_index] = temp;
+            }
         }
 
         // Now that the list is sorted based on card size, add points accordingly
         sorted_pinfo[0].addScore(3);
         sorted_pinfo[1].addScore(2);
         sorted_pinfo[2].addScore(1);
+
+        Log.i("compare","SORTED LIST:");
+        for (PlayerInfo playerInfo : sorted_pinfo) {
+            Log.i("compare",playerInfo.toString());
+        }
     }
 
     private void nextTurn() {

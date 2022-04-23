@@ -1,5 +1,7 @@
 package com.example.presidentasshole.info;
 
+import androidx.annotation.NonNull;
+
 import com.example.presidentasshole.cards.Card;
 import com.example.presidentasshole.cards.CardStack;
 import com.example.presidentasshole.cards.Deck;
@@ -96,5 +98,13 @@ public class PlayerInfo {
 
     public void addScore(int i) {
         this.score += i;
+    }
+
+    @Override
+    public String toString() {
+        return "Player Name: " + this.name + "\n" +
+                "ID: " + this.id + "\n" +
+                "Score: " + this.score + "\n" +
+                "Deck Contents: " + this.deck.toString() + "\n";
     }
 }
