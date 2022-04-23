@@ -56,6 +56,10 @@ public class PresidentGameState extends GameState {
     }
 
     public void registerPlayer(String name, int id) {
+
+        if (id > player_info.length - 1 || id < 0) {
+            return;
+        }
         this.player_info[id] = new PlayerInfo(name, id);
     }
 
