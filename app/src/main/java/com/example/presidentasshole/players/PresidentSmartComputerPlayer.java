@@ -44,7 +44,6 @@ public class PresidentSmartComputerPlayer extends GameComputerPlayer {
 
             Random rand = new Random();
             long time = 500 + rand.nextInt(500);
-            time = 1; // TODO change this
 
             /**
              * External Citation

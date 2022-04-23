@@ -1,21 +1,19 @@
 package com.example.presidentasshole.players;
 
-import android.animation.ObjectAnimator;
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+
 import android.content.pm.ActivityInfo;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Path;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.PathInterpolator;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.Space;
 import android.widget.TextView;
 
@@ -58,6 +56,8 @@ public class PresidentHumanPlayer extends GameHumanPlayer
     private int num_players;
     private boolean collapse; // Whether or not the cards should render collapsed or not
 
+    private GameMainActivity activity;
+
     private RelativeLayout card_layout;
     private RelativeLayout play_layout;
 
@@ -80,6 +80,8 @@ public class PresidentHumanPlayer extends GameHumanPlayer
 
     @Override
     public void setAsGui(GameMainActivity activity) {
+
+        this.activity = activity;
 
         activity.setTheme(R.style.Theme_MyApplication);
         activity.setContentView(R.layout.president_asshole);
@@ -118,6 +120,7 @@ public class PresidentHumanPlayer extends GameHumanPlayer
         );
 
         activity.findViewById(R.id.PlayerCardScrollView).setOnScrollChangeListener(this);
+        activity.findViewById(R.id.help_button).setOnClickListener(this);
         onScrollChange(((HorizontalScrollView)this.card_layout.getParent()),0,0,1,0);
 
     }
@@ -297,11 +300,40 @@ public class PresidentHumanPlayer extends GameHumanPlayer
     }
 
     /**
-     * Called whenever a CardImage is selected.
+     * Called whenever a CardImage/Help button is selected.
      * @param view
      */
     @Override
     public void onClick(View view) {
+
+        if (view.getId() == R.id.help_button) {
+            Log.i("President","Help button pressed");
+
+            /**
+             External Citation
+              Date: 23 April 2022
+              Problem: Needed a popup window for the tutorial
+              Resource: https://stackoverflow.com/questions/5944987/how-to-create-a-popup-window-popupwindow-in-android
+              Solution: I used the example code from this post.
+             */
+            // inflate the layout of the popup window
+            LayoutInflater inflater = (LayoutInflater)
+                    activity.getSystemService(LAYOUT_INFLATER_SERVICE);
+            View popupView = inflater.inflate(R.layout.help_popup, null);
+            ImageView tutorial = new ImageView(activity.getApplicationContext());
+            tutorial.setImageResource(R.drawable.tutorial);
+            ((LinearLayout) popupView).addView(tutorial);
+
+            // create the popup window
+            int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+            int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            boolean focusable = true; // lets taps outside the popup also dismiss it
+            final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+
+            // show the popup window
+            // which view you pass in doesn't matter, it is only used for the window tolken
+            popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+        }
         
         if (view instanceof ScrollIndicatorImage) {
             ScrollIndicatorImage sii = (ScrollIndicatorImage) view;
