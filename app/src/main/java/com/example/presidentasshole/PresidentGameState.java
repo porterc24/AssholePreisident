@@ -20,6 +20,17 @@ public class PresidentGameState extends GameState {
     private TurnCounter turn_counter;
     private CardStack play_pile;
 
+    // default ctor, for JUnit
+    public PresidentGameState() {
+        this.config = null;
+        this.NUM_PLAYERS = 4;
+        this.turn_counter = new TurnCounter(NUM_PLAYERS);
+        this.pass_counter = 0;
+        this.play_pile = new CardStack();
+        this.player_info = new PlayerInfo[NUM_PLAYERS];
+        this.isGameOver = false;
+    }
+
     public PresidentGameState(GameConfig config) {
         this.config = config;
         this.NUM_PLAYERS = config.getNumPlayers();

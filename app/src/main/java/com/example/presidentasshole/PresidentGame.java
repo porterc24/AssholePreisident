@@ -77,7 +77,6 @@ public class PresidentGame extends LocalGame implements DialogInterface.OnClickL
                 //selects a random card of the 52 in masterDeck
                 Card randomCard = (masterDeck.getCards().get((int) Math.random() * masterDeck.MAX_CARDS));
 
-
                 player_data.addCard(randomCard);
                 masterDeck.getCards().remove(randomCard);
             }
