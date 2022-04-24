@@ -2,11 +2,10 @@ package com.example.presidentasshole;
 
 import com.example.presidentasshole.cards.Card;
 import com.example.presidentasshole.cards.CardStack;
-import com.example.presidentasshole.game.GamePlayer;
 import com.example.presidentasshole.game.config.GameConfig;
 import com.example.presidentasshole.game.infoMsg.GameState;
-
-import java.util.ArrayList;
+import com.example.presidentasshole.info.PlayerInfo;
+import com.example.presidentasshole.util.TurnCounter;
 
 public class PresidentGameState extends GameState {
 
@@ -68,6 +67,10 @@ public class PresidentGameState extends GameState {
     }
 
     public void registerPlayer(String name, int id) {
+
+        if (id > player_info.length - 1 || id < 0) {
+            return;
+        }
         this.player_info[id] = new PlayerInfo(name, id);
     }
 
@@ -85,7 +88,7 @@ public class PresidentGameState extends GameState {
     }
 
     public int getTurn() {
-        return this.turn_counter.turn;
+        return this.turn_counter.getTurn();
     }
 
     public boolean selectCard(Card card, int id) {

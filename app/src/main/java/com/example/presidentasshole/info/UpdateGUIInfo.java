@@ -1,16 +1,17 @@
-package com.example.presidentasshole;
+package com.example.presidentasshole.info;
 
+import com.example.presidentasshole.PresidentMainActivity;
 import com.example.presidentasshole.game.infoMsg.GameInfo;
 
-public class UpdatePeripheralInfo extends GameInfo {
+public class UpdateGUIInfo extends GameInfo {
 
     private int turn; // The current turn of the game
     private PresidentMainActivity activity;
     private PlayerInfo[] player_scores;
     // TODO other player's scores
 
-    public UpdatePeripheralInfo(int turn, PlayerInfo[] player_scores,
-                                PresidentMainActivity activity) {
+    public UpdateGUIInfo(int turn, PlayerInfo[] player_scores,
+                         PresidentMainActivity activity) {
         this.turn = turn;
         this.player_scores = player_scores;
         this.activity = activity;

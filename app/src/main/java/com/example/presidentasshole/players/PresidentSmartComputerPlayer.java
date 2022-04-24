@@ -1,8 +1,12 @@
-package com.example.presidentasshole;
+package com.example.presidentasshole.players;
 
 import android.os.Handler;
 import android.util.Log;
 
+import com.example.presidentasshole.PresidentGameState;
+import com.example.presidentasshole.actions.AISelectCardAction;
+import com.example.presidentasshole.actions.PassAction;
+import com.example.presidentasshole.actions.PlayCardAction;
 import com.example.presidentasshole.cards.Card;
 import com.example.presidentasshole.cards.CardStack;
 import com.example.presidentasshole.cards.CardValues;

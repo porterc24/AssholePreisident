@@ -72,7 +72,7 @@ Deck {
         for (int suite = 1; suite <= 4; suite ++) {
             // Inner loop is for ranks
             for (int rank = 1; rank <= 13; rank ++) {
-                Log.i("President","SUITE: " + suite + " RANK: " + rank); // DEBUG
+//                Log.i("President","SUITE: " + suite + " RANK: " + rank); // DEBUG
                 this.cards.add(new Card(rank+2,suite)); // +2 is necessary (see CardValues)
             }
         }

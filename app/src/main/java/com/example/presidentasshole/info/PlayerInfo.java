@@ -1,9 +1,15 @@
-package com.example.presidentasshole;
+package com.example.presidentasshole.info;
+
+import androidx.annotation.NonNull;
 
 import com.example.presidentasshole.cards.Card;
 import com.example.presidentasshole.cards.CardStack;
 import com.example.presidentasshole.cards.Deck;
 
+/**
+ * Encapsulates information about players. Stored in the player_info[] array in
+ * PresidentGameState.
+ */
 public class PlayerInfo {
 
     private String name;
@@ -12,6 +18,7 @@ public class PlayerInfo {
 
     private int id;
     private int score;
+    private int gui_deck_size; // This is only used when sending UpdateGUIInfo to players
 
     private boolean collapse;
 
@@ -77,11 +84,27 @@ public class PlayerInfo {
         return score;
     }
 
+    public void setGUIDeckSize(int deck_size) {
+        this.gui_deck_size = deck_size;
+    }
+
+    public int getGUIDeckSize() {
+        return gui_deck_size;
+    }
+
     public void setScore(int score) {
         this.score = score;
     }
 
     public void addScore(int i) {
         this.score += i;
+    }
+
+    @Override
+    public String toString() {
+        return "Player Name: " + this.name + "\n" +
+                "ID: " + this.id + "\n" +
+                "Score: " + this.score + "\n" +
+                "Deck Contents: " + this.deck.toString() + "\n";
     }
 }

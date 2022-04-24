@@ -2,26 +2,34 @@ package com.example.presidentasshole.cards;
 
 import android.content.Context;
 import android.util.Log;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 
-import com.example.presidentasshole.PresidentGameDeprecated;
 import com.example.presidentasshole.R;
+import com.example.presidentasshole.players.PresidentHumanPlayer;
 
 /**
  * @author Max Woods
  *
- * Visual representation of a card object on the screen.
+ * Visual representation of a card object on the screen. This is used in the player's hand, as
+ * well as the PlayPile. It functions as an image button. The HumanPlayer functions as its
+ * onClickListener
+ *
+ * @see
+ *  PresidentHumanPlayer
  */
 public class CardImage extends androidx.appcompat.widget.AppCompatImageButton {
 
     private Card card_model;
-    private boolean selected;
+    private boolean is_play_pile;
 
-    public CardImage(@NonNull Context context, Card card_model, int id, boolean collapse) {
+    public CardImage(@NonNull Context context,
+                     Card card_model,
+                     int id,
+                     boolean collapse,
+                     boolean is_play_pile) {
         super(context);
         /**
          * External Citation
@@ -41,15 +49,14 @@ public class CardImage extends androidx.appcompat.widget.AppCompatImageButton {
         );
         // TODO might wanna replace this with display pixels
         this.card_model = card_model;
+        this.is_play_pile = is_play_pile;
         this.setId(id);
-        this.selected = false;
-
         int margins = 5;
 
         // This && check is to prevent the card from going out of bounds
         // TODO fix this
         if (collapse && id > 1) {
-            margins = -90;
+            margins = -130;
         }
 
         // TODO Fix bug where the first two cards are on top of each other
@@ -64,21 +71,17 @@ public class CardImage extends androidx.appcompat.widget.AppCompatImageButton {
 
         this.setAdjustViewBounds(true);
         this.setLayoutParams(params);
-        this.setImageResource(this.card_model.toResourceID());
         this.setWillNotDraw(false);
 
-        if (this.card_model.isSelected()) {
-            this.setAlpha(0.5f);
-        }
-    }
-
-    public void setSelected(boolean selected) {
-        if (selected) {
-            this.setAlpha(0.5f);
-            this.selected = true;
+        // -99 means this is a back-facing card
+        if (this.card_model.getRank() == -99) {
+            this.setImageResource(R.drawable.backofcard);
         } else {
-            this.setAlpha(1.0f);
-            this.selected = false;
+            this.setImageResource(this.card_model.toResourceID());
+        }
+
+        if (isSelected()) {
+            this.setAlpha(0.5f);
         }
     }
 
@@ -87,7 +90,11 @@ public class CardImage extends androidx.appcompat.widget.AppCompatImageButton {
     }
 
     public boolean isSelected() {
-        return this.selected;
+        return this.card_model.isSelected();
+    }
+
+    public boolean isPlayPile() {
+        return this.is_play_pile;
     }
 
     public void delete() {

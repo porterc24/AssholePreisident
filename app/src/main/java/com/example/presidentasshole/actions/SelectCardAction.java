@@ -1,4 +1,4 @@
-package com.example.presidentasshole;
+package com.example.presidentasshole.actions;
 
 import com.example.presidentasshole.cards.Card;
 import com.example.presidentasshole.cards.CardImage;

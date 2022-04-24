@@ -8,6 +8,7 @@
     tools:context=".PresidentMainActivity">
 
     <LinearLayout
+        android:id="@+id/MainLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -94,7 +95,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"/>
+                android:gravity="center" />
 
             <LinearLayout
                 android:id="@+id/player4_layout_p4"
@@ -149,32 +150,17 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/scroll_left_indicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <Button
-                    android:id="@+id/collapse_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:text="Collapse" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-            </LinearLayout>
+                android:layout_weight="1"
+                android:orientation="vertical"></LinearLayout>
 
             <HorizontalScrollView
                 android:id="@+id/PlayerCardScrollView"
-                android:layout_width="700sp"
+                android:layout_width="800sp"
                 android:layout_height="200sp"
+                android:layout_weight="0.03"
                 android:clipToPadding="false"
                 android:fadeScrollbars="false"
                 android:isScrollContainer="false">
@@ -284,76 +270,30 @@
             </HorizontalScrollView>
 
             <LinearLayout
+                android:id="@+id/scroll_right_indicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center_horizontal"
                 android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/pass_button_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <Space
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                    <Button
-                        android:id="@+id/pass_button"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.25"
-                        android:text="Pass" />
-
-                    <Space
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/play_button_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="clip_horizontal">
-
-                    <Space
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                    <Button
-                        android:id="@+id/play_button"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.25"
-                        android:gravity="center_horizontal"
-                        android:text="Play" />
-
-                    <Space
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-                </LinearLayout>
 
             </LinearLayout>
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="30"
+            android:orientation="vertical">
+
             <ImageButton
-                android:id="@+id/imageButton"
+                android:id="@+id/help_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|right"
-                android:adjustViewBounds="false"
-                android:cropToPadding="false"
-                app:srcCompat="@android:drawable/ic_menu_help"
-                tools:ignore="SpeakableTextPresentCheck" />
-
+                android:layout_gravity="right"
+                android:src="@android:drawable/ic_menu_help" />
         </LinearLayout>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

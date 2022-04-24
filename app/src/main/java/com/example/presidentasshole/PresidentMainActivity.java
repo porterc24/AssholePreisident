@@ -1,10 +1,21 @@
 package com.example.presidentasshole;
 
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.View;
+
 import com.example.presidentasshole.game.GameMainActivity;
 import com.example.presidentasshole.game.GamePlayer;
 import com.example.presidentasshole.game.LocalGame;
 import com.example.presidentasshole.game.config.GameConfig;
 import com.example.presidentasshole.game.config.GamePlayerType;
+import com.example.presidentasshole.players.PresidentDumbComputerPlayer;
+import com.example.presidentasshole.players.PresidentHumanPlayer;
+import com.example.presidentasshole.players.PresidentSmartComputerPlayer;
 
 import java.util.ArrayList;
 
@@ -14,11 +25,8 @@ import java.util.ArrayList;
  * @author Renn Torigoe
  * @author Max Woods
  *
- * Beware of bugs! This is a pretty sloppily made version of the game. The game framework
- * implementation leaves a lot to be desired (many features of it are in the wrong place/missing).
- * These will certainly be fixed by the next project due-date.
- *
- * For now, however, it works :^).
+ * This is the main for the PresidentAsshole game. It initializes all of the configuarion files, the
+ * Game, and the players.
  */
 public class PresidentMainActivity extends GameMainActivity {
 
@@ -50,7 +58,7 @@ public class PresidentMainActivity extends GameMainActivity {
         GameConfig config = new GameConfig(
            avail_types,
            4,
-           8,
+           4,
            "President (Asshole)",
            69
         );
@@ -66,5 +74,12 @@ public class PresidentMainActivity extends GameMainActivity {
     @Override
     public LocalGame createLocalGame() {
         return new PresidentGame(this.config, this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.game_main, menu);
+        return true;
     }
 }
